@@ -12,7 +12,7 @@
     <FrameLayout
         android:layout_width="fill_parent"
         android:layout_height="0dp"
-        android:layout_weight="100"
+        android:layout_weight="101"
         android:foreground="?android:windowContentOverlay">
         <ScrollView
             android:layout_width="match_parent"
@@ -180,10 +180,11 @@
     <LinearLayout
         android:layout_gravity="bottom"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="#000000">
         <android.support.v4.view.ViewPager
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="60dp"
             android:id="@+id/pager">
         </android.support.v4.view.ViewPager>
     </LinearLayout>
