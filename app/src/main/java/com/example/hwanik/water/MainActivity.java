@@ -22,6 +22,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
@@ -96,6 +97,55 @@ public class MainActivity extends AppCompatActivity {
 
         loadChartData();
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.logout) {
+            logout();
+            return true;
+        }
+        if (id == R.id.refresh){
+            refresh();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void refresh() {
+        MaterialDialog.Builder dialogBuilder;
+        MaterialDialog mDialog;
+        dialogBuilder = new MaterialDialog.Builder(MainActivity.this);
+        dialogBuilder.title("데이터 로드중..")
+                .content("잠시만 기다려주세요")
+                .progress(true, 0);
+        mDialog = dialogBuilder.build();
+        mDialog.show();
+
+        loadChartData();
+        new JsonLoadingTask().execute();
+
+        mDialog.dismiss();
+    }
+
+    private void logout() {
+        ParseUser.logOut();
+        Intent intent = new Intent(this, Login.class);
+        startActivity(intent);
+        finish();
     }
 
     private void loadChartData() {

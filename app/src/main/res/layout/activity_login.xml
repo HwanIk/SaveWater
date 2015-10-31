@@ -18,15 +18,17 @@
         android:layout_width="180dp"
         android:layout_height="wrap_content"
         android:hint="닉네임을 입력해주세요"
+        android:textSize="15sp"
         app:met_baseColor="#000000"
         app:met_primaryColor="#0072ff"
         app:met_errorColor="#ddaa00"
-        app:met_textColorHint="#d8d8d8"/>
+        app:met_textColorHint="#d8d8d8" />
     <com.rengwuxian.materialedittext.MaterialEditText
         android:id="@+id/userPwd"
         android:layout_width="180dp"
         android:layout_height="wrap_content"
         android:hint="비밀번호를 입력해주세요"
+        android:textSize="15sp"
         app:met_baseColor="#000000"
         app:met_primaryColor="#0056d3"
         app:met_errorColor="#ddaa00"
