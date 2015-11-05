@@ -77,6 +77,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        PurificationPlant_choice="311";
+        new JsonLoadingTask().execute();
+
+
         toolbar=(Toolbar)findViewById(R.id.toolBar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setElevation(4);
@@ -91,9 +95,6 @@ public class MainActivity extends AppCompatActivity {
 //        mCustomPagerAdapter = new CustomPagerAdapter(this);  
 //        mViewPager = (ViewPager) findViewById(R.id.pager); 
 //        mViewPager.setAdapter(mCustomPagerAdapter);
-
-        PurificationPlant_choice="311";
-        new JsonLoadingTask().execute();
 
         loadChartData();
 
@@ -206,26 +207,26 @@ public class MainActivity extends AppCompatActivity {
             }
         }).start();
         try {
-                String line = getStringFromUrl("http://opendata.kwater.or.kr:80/openapi-data/service/pubd/waterways/wdr/dailwater/list?_type=json&fcode="+PurificationPlant_choice+"&stdt=2014-10-01&eddt=2014-10-07&serviceKey=E%2B0%2BhJolGH9ppT7r1hfU18qRRHvxTQOATomUAZ%2BIiHXSQ666uyApIt0sQCdWmGCM%2FlRiQ8wGLHTDr4aG6EyCbQ%3D%3D");
-                String line1 = null;
+            String line = getStringFromUrl("http://opendata.kwater.or.kr:80/openapi-data/service/pubd/waterways/wdr/dailwater/list?_type=json&fcode="+PurificationPlant_choice+"&stdt=2014-10-01&eddt=2014-10-07&serviceKey=E%2B0%2BhJolGH9ppT7r1hfU18qRRHvxTQOATomUAZ%2BIiHXSQ666uyApIt0sQCdWmGCM%2FlRiQ8wGLHTDr4aG6EyCbQ%3D%3D");
+            String line1 = null;
 
-                line1 = line.substring(96,line.length()-4);
-                if(PurificationPlant_choice.equals("337")){
-                    line1="["+line1+"]";
-                }
+            line1 = line.substring(96,line.length()-4);
+            if(PurificationPlant_choice.equals("337")){
+                line1="["+line1+"]";
+            }
                 /* 넘어오는 데이터 구조 { [ { } ] } JSON 객체 안에 배열안에 내부JSON 객체*/
 
-                JSONArray Array = new JSONArray(line1);
+            JSONArray Array = new JSONArray(line1);
 
-                // bodylist 배열안에 내부 JSON 이므로 JSON 내부 객체 생성
-                JSONObject insideObject = Array.getJSONObject(0);
+            // bodylist 배열안에 내부 JSON 이므로 JSON 내부 객체 생성
+            JSONObject insideObject = Array.getJSONObject(0);
 
-                // StringBuffer 메소드 ( append : StringBuffer 인스턴스에 뒤에 덧붙인다. )
-                // JSONObject 메소드 ( get.String(), getInt(), getBoolean() .. 등 : 객체로부터 데이터의 타입에 따라 원하는 데이터를 읽는다. )
+            // StringBuffer 메소드 ( append : StringBuffer 인스턴스에 뒤에 덧붙인다. )
+            // JSONObject 메소드 ( get.String(), getInt(), getBoolean() .. 등 : 객체로부터 데이터의 타입에 따라 원하는 데이터를 읽는다. )
 
-                items.add(insideObject.getString("item4"));
-                items.add(insideObject.getString("item5"));
-                items.add(insideObject.getString("item6"));
+            items.add(insideObject.getString("item4"));
+            items.add(insideObject.getString("item5"));
+            items.add(insideObject.getString("item6"));
 //                items.add(insideObject.getString("item7"));
         } catch (JSONException e) {
             e.printStackTrace();

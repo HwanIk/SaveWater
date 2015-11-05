@@ -2,18 +2,24 @@ package com.example.hwanik.water;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.parse.FindCallback;
+import com.parse.GetCallback;
 import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -26,10 +32,15 @@ import java.util.List;
 
 public class SignUp extends AppCompatActivity {
 
+    TextInputLayout tilEmail;
+    TextInputLayout tilName;
+    TextInputLayout tilPwd;
+    TextInputLayout tilfNum;
     private MaterialEditText userEmail;
     private MaterialEditText userPwd;
     private MaterialEditText userNickName;
     private MaterialEditText userFamilyMember;
+    private TextView checkEmail;
     private Button btnSignUp;
     private Button city;
     private Button district;
@@ -99,15 +110,58 @@ public class SignUp extends AppCompatActivity {
         district.setText("");
 
         userEmail=(MaterialEditText)findViewById(R.id.userEmail);
+        userEmail.addTextChangedListener(new MyTextWatcher(userEmail));
+
         userPwd=(MaterialEditText)findViewById(R.id.userPwd);
         userNickName=(MaterialEditText)findViewById(R.id.userNickName);
         userFamilyMember=(MaterialEditText)findViewById(R.id.userFamilyMember);
+
+        tilEmail= (TextInputLayout) findViewById(R.id.input_layout_email);
+        tilName= (TextInputLayout) findViewById(R.id.input_layout_nName);
+        tilPwd= (TextInputLayout) findViewById(R.id.input_layout_pwd);
+        tilfNum= (TextInputLayout) findViewById(R.id.input_layout_fNum);
+        checkEmail = (TextView) findViewById(R.id.checkEmail);
+        checkEmail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ParseQuery<ParseUser> query = ParseUser.getQuery();
+                query.whereEqualTo("email", userEmail.getText().toString());
+                query.findInBackground(new FindCallback<ParseUser>() {
+                    public void done(List<ParseUser> list, ParseException e) {
+                        if (e == null) {
+                            if(list.size() == 0 && validateEmail()) {
+                                Log.d("aa", String.valueOf(list.size()));
+                                Log.d("aa",userEmail.getText().toString());
+                                Toast.makeText(SignUp.this,"사용가능한 이메일입니다",Toast.LENGTH_SHORT).show();
+                            }
+                            else{
+                                Log.d("aa", String.valueOf(list.size()));
+                                Toast.makeText(SignUp.this,"이미 가입된 이메일입니다",Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            // Something went wrong.
+                        }
+                    }
+                });
+            }
+        });
 
         btnSignUp=(Button)findViewById(R.id.btnSignUp);
         btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                if (!validateEmail()) {
+                    return;
+                }
+                if (!validateName()) {
+                    return;
+                }
+                if (!validatePassword()) {
+                    return;
+                }
+                if (!validatefNum()){
+                    return;
+                }
                 ParseUser user = new ParseUser();
                 user.setUsername(userNickName.getText().toString());
                 user.setPassword(userPwd.getText().toString());
@@ -134,6 +188,56 @@ public class SignUp extends AppCompatActivity {
         });
     }
 
+    private boolean validateName() {
+        if (userNickName.getText().toString().trim().isEmpty()) {
+            tilName.setError(getString(R.string.err_msg_name));
+            requestFocus(userNickName);
+            return false;
+        } else {
+            tilName.setErrorEnabled(false);
+        }
+        return true;
+    }
+    private boolean validatePassword() {
+        if (userPwd.getText().toString().trim().isEmpty()) {
+            tilPwd.setError(getString(R.string.err_msg_pwd));
+            requestFocus(userPwd);
+            return false;
+        } else {
+            tilPwd.setErrorEnabled(false);
+        }
+        return true;
+    }
+    private boolean validateEmail() {
+        String email = userEmail.getText().toString().trim();
+        if (email.isEmpty() || !isValidEmail(email)) {
+            tilEmail.setError(getString(R.string.err_msg_email));
+            requestFocus(userEmail);
+            return false;
+        } else {
+            tilEmail.setErrorEnabled(false);
+        }
+        return true;
+    }
+    private boolean validatefNum() {
+        if (userFamilyMember.getText().toString().trim().isEmpty()) {
+            tilfNum.setError(getString(R.string.err_msg_fNum));
+            requestFocus(userFamilyMember);
+            return false;
+        } else {
+            tilfNum.setErrorEnabled(false);
+        }
+        return true;
+    }
+    private static boolean isValidEmail(String email) {
+        return !TextUtils.isEmpty(email) && android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
+    }
+    private void requestFocus(View view) {
+        if (view.requestFocus()) {
+            getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+        }
+    }
+
     private void takeCode(String city, String district) {
 
         ParseQuery<ParseObject> query = ParseQuery.getQuery("AddressCode");
@@ -149,7 +253,7 @@ public class SignUp extends AppCompatActivity {
                 }
             }
         });
-        Toast.makeText(SignUp.this,String.valueOf(code),Toast.LENGTH_SHORT).show();
+        Toast.makeText(SignUp.this, String.valueOf(code), Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -321,5 +425,33 @@ public class SignUp extends AppCompatActivity {
         builder.create();
         builder.show();
 
+    }
+    private class MyTextWatcher implements TextWatcher {
+
+        private View view;
+
+        private MyTextWatcher(View view) {
+            this.view = view;
+        }
+
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        }
+
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        }
+
+        public void afterTextChanged(Editable editable) {
+            switch (view.getId()) {
+                case R.id.userNickName:
+//                    validateName();
+                    break;
+                case R.id.userEmail:
+                    validateEmail();
+                    break;
+                case R.id.userPwd:
+//                    validatePassword();
+                    break;
+            }
+        }
     }
 }

@@ -12,4 +12,9 @@
     <string name="title_activity_splash">Splash</string>
     <string name="title_activity_test">test</string>
     <string name="title_activity_detail_ad">DetailAd</string>
+    <string name="title_activity_main2">Main2Activity</string>
+    <string name="err_msg_email">잘못된 이메일 형식입니다</string>
+    <string name="err_msg_name">닉네임을 입력해주세요</string>
+    <string name="err_msg_pwd">비밀번호를 입력해주세요</string>
+    <string name="err_msg_fNum">거주인원을 입력해주세요</string>
 </resources>

@@ -1,13 +1,19 @@
 package com.example.hwanik.water;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -37,6 +43,9 @@ public class parsingJson extends AppCompatActivity {
     MaterialDialog.Builder dialogBuilder;
     MaterialDialog mDialog;
     ArrayList<String> items = new ArrayList<>();
+    ListView lv;
+    listAdapter mAdapter;
+    ArrayList<Listitem> data = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +53,7 @@ public class parsingJson extends AppCompatActivity {
         setContentView(R.layout.activity_parsing_json);
 
         toolbar=(Toolbar)findViewById(R.id.toolbar_spinner);
+        setSupportActionBar(toolbar);
         setTitle("수질정보");
 
         String[] PurificationPlant = {"고령 정수장","고산 정수장","고양 정수장","공주 정수장","구미 정수장","구천 정수장","금산 정수장","덕소 정수장","덕정 정수장","동화 정수장","밀양 정수장","반송 정수장",
@@ -61,7 +71,7 @@ public class parsingJson extends AppCompatActivity {
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
-                PurificationPlant_choice=PurificationPlant_code[position];
+                PurificationPlant_choice = PurificationPlant_code[position];
                 new JsonLoadingTask().execute();
 
                 dialogBuilder = new MaterialDialog.Builder(parsingJson.this);
@@ -78,10 +88,78 @@ public class parsingJson extends AppCompatActivity {
             }
         });
 
-        setSupportActionBar(toolbar);
+        mAdapter = new listAdapter(this,data);
+        data.add(new Listitem(R.drawable.n1, "맛", "매우 좋음", "7.8"));
+        data.add(new Listitem(R.drawable.n2, "냄새", "매우 좋음", "7.8"));
+        data.add(new Listitem(R.drawable.n3,"색도", "매우 좋음","7.8"));
+        data.add(new Listitem(R.drawable.n4, "ph", "매우 좋음", "7.8"));
+        data.add(new Listitem(R.drawable.n5, "탁도", "매우 좋음", "7.8"));
+        data.add(new Listitem(R.drawable.n6,"잔류염소", "매우 좋음","7.8"));
+        lv = (ListView)findViewById(R.id.lv);
+
+
+        mAdapter.notifyDataSetChanged();
+        lv.setAdapter(mAdapter);
 
         tv=(TextView)findViewById(R.id.data);
         new JsonLoadingTask().execute();
+    }
+    public class Listitem{
+        int imgId;
+        String category;
+        String status;
+        String data;
+        public Listitem(int imgId, String category, String status, String data){
+            this.imgId=imgId;
+            this.category=category;
+            this.status=status;
+            this.data=data;
+        }
+    }
+
+    public class listAdapter extends BaseAdapter{
+        Context context;
+        ArrayList<Listitem> list;
+        public listAdapter(Context context, ArrayList<Listitem> list){
+            this.context=context;
+            this.list=list;
+        }
+        @Override
+        public int getCount() {
+            return list.size();
+        }
+        @Override
+        public Listitem getItem(int position) {
+            return list.get(position);
+        }
+        @Override
+        public long getItemId(int i) {
+            return 0;
+        }
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            ViewHolder viewHolder = new ViewHolder();
+            if(convertView==null){
+                LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                convertView = inflater.inflate(R.layout.list_item, null);
+
+                viewHolder.number = (ImageView)convertView.findViewById(R.id.number);
+                viewHolder.category = (TextView)convertView.findViewById(R.id.category);
+                viewHolder.status = (TextView)convertView.findViewById(R.id.status);
+                viewHolder.data = (TextView)convertView.findViewById(R.id.data);
+
+                convertView.setTag(viewHolder);
+            }else{
+                convertView.getTag();
+            }
+
+            viewHolder.number.setImageResource(list.get(position).imgId);
+            viewHolder.category.setText(list.get(position).category);
+            viewHolder.status.setText(list.get(position).status);
+            viewHolder.data.setText(list.get(position).data);
+
+            return convertView;
+        }
     }
 
     public String getJsonText() {
@@ -146,8 +224,6 @@ public class parsingJson extends AppCompatActivity {
         }
         return sb.toString();
     } // getJsonText
-
-
     // getStringFromUrl : 주어진 URL 페이지를 문자열로 얻는다.
     public String getStringFromUrl(String url) throws UnsupportedEncodingException {
 
@@ -170,7 +246,6 @@ public class parsingJson extends AppCompatActivity {
         }
         return sb.toString();
     } // getStringFromUrl
-
     // getInputStreamFromUrl : 주어진 URL 에 대한 입력 스트림(InputStream)을 얻는다.
     public static InputStream getInputStreamFromUrl(String url) {
         InputStream contentStream = null;

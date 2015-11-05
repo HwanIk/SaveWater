@@ -59,10 +59,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".test"
-            android:label="@string/title_activity_test" >
-        </activity>
-        <activity
             android:name=".DetailAd"
             android:label="@string/title_activity_detail_ad" >
         </activity>
