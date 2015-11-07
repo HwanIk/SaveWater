@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 
@@ -65,6 +67,12 @@ public class parsingJson extends AppCompatActivity {
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, PurificationPlant);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
+        dialogBuilder = new MaterialDialog.Builder(parsingJson.this);
+        dialogBuilder.title("데이터 로드중..")
+                .content("잠시만 기다려주세요")
+                .progress(true, 0);
+        mDialog = dialogBuilder.build();
+
 
         spinner = (MaterialSpinner)findViewById(R.id.spinner);
         spinner.setAdapter(adapter);
@@ -72,13 +80,8 @@ public class parsingJson extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
                 PurificationPlant_choice = PurificationPlant_code[position];
+                data.clear();
                 new JsonLoadingTask().execute();
-
-                dialogBuilder = new MaterialDialog.Builder(parsingJson.this);
-                dialogBuilder.title("데이터 로드중..")
-                        .content("잠시만 기다려주세요")
-                        .progress(true, 0);
-                mDialog = dialogBuilder.build();
                 mDialog.show();
             }
 
@@ -89,19 +92,10 @@ public class parsingJson extends AppCompatActivity {
         });
 
         mAdapter = new listAdapter(this,data);
-        data.add(new Listitem(R.drawable.n1, "맛", "매우 좋음", "7.8"));
-        data.add(new Listitem(R.drawable.n2, "냄새", "매우 좋음", "7.8"));
-        data.add(new Listitem(R.drawable.n3,"색도", "매우 좋음","7.8"));
-        data.add(new Listitem(R.drawable.n4, "ph", "매우 좋음", "7.8"));
-        data.add(new Listitem(R.drawable.n5, "탁도", "매우 좋음", "7.8"));
-        data.add(new Listitem(R.drawable.n6,"잔류염소", "매우 좋음","7.8"));
         lv = (ListView)findViewById(R.id.lv);
-
-
         mAdapter.notifyDataSetChanged();
         lv.setAdapter(mAdapter);
 
-        tv=(TextView)findViewById(R.id.data);
         new JsonLoadingTask().execute();
     }
     public class Listitem{
@@ -119,10 +113,13 @@ public class parsingJson extends AppCompatActivity {
 
     public class listAdapter extends BaseAdapter{
         Context context;
-        ArrayList<Listitem> list;
+        ArrayList<Listitem> list = new ArrayList<>();
         public listAdapter(Context context, ArrayList<Listitem> list){
+            super();
             this.context=context;
             this.list=list;
+            Log.d("zz", String.valueOf(list.size()));
+            Toast.makeText(parsingJson.this, String.valueOf(list.size()), Toast.LENGTH_SHORT).show();
         }
         @Override
         public int getCount() {
@@ -138,7 +135,9 @@ public class parsingJson extends AppCompatActivity {
         }
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
+
             ViewHolder viewHolder = new ViewHolder();
+
             if(convertView==null){
                 LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 convertView = inflater.inflate(R.layout.list_item, null);
@@ -150,9 +149,8 @@ public class parsingJson extends AppCompatActivity {
 
                 convertView.setTag(viewHolder);
             }else{
-                convertView.getTag();
+                viewHolder=(ViewHolder)convertView.getTag();
             }
-
             viewHolder.number.setImageResource(list.get(position).imgId);
             viewHolder.category.setText(list.get(position).category);
             viewHolder.status.setText(list.get(position).status);
@@ -178,45 +176,25 @@ public class parsingJson extends AppCompatActivity {
             }
         }).start();
         try {
-            if(PurificationPlant_choice==null) {
-                String line = getStringFromUrl("http://opendata.kwater.or.kr:80/openapi-data/service/pubd/waterways/wdr/dailwater/list?_type=json&fcode=312&stdt=2014-10-01&eddt=2014-10-07&serviceKey=E%2B0%2BhJolGH9ppT7r1hfU18qRRHvxTQOATomUAZ%2BIiHXSQ666uyApIt0sQCdWmGCM%2FlRiQ8wGLHTDr4aG6EyCbQ%3D%3D");
+            String line = getStringFromUrl("http://opendata.kwater.or.kr:80/openapi-data/service/pubd/waterways/wdr/dailwater/list?_type=json&fcode="+PurificationPlant_choice+"&stdt=2014-10-01&eddt=2014-10-07&serviceKey=E%2B0%2BhJolGH9ppT7r1hfU18qRRHvxTQOATomUAZ%2BIiHXSQ666uyApIt0sQCdWmGCM%2FlRiQ8wGLHTDr4aG6EyCbQ%3D%3D");
+            String line1 = line.substring(96,line.length()-4);
+            if(PurificationPlant_choice.equals("337")){
+                line1="["+line1+"]";
             }
-            else{
-                String line = getStringFromUrl("http://opendata.kwater.or.kr:80/openapi-data/service/pubd/waterways/wdr/dailwater/list?_type=json&fcode="+PurificationPlant_choice+"&stdt=2014-10-01&eddt=2014-10-07&serviceKey=E%2B0%2BhJolGH9ppT7r1hfU18qRRHvxTQOATomUAZ%2BIiHXSQ666uyApIt0sQCdWmGCM%2FlRiQ8wGLHTDr4aG6EyCbQ%3D%3D");
-                String line1 = null;
+            /* 넘어오는 데이터 구조 { [ { } ] } JSON 객체 안에 배열안에 내부JSON 객체*/
 
-                line1 = line.substring(96,line.length()-4);
-                if(PurificationPlant_choice.equals("337")){
-                    line1="["+line1+"]";
-                }
-                /* 넘어오는 데이터 구조 { [ { } ] } JSON 객체 안에 배열안에 내부JSON 객체*/
+            JSONArray Array = new JSONArray(line.substring(96,line.length()-4));
 
-                JSONArray Array = new JSONArray(line1);
+            // bodylist 배열안에 내부 JSON 이므로 JSON 내부 객체 생성
+            JSONObject insideObject = Array.getJSONObject(0);
 
-                // bodylist 배열안에 내부 JSON 이므로 JSON 내부 객체 생성
-                JSONObject insideObject = Array.getJSONObject(0);
+            // JSONObject 메소드 ( get.String(), getInt(), getBoolean() .. 등 : 객체로부터 데이터의 타입에 따라 원하는 데이터를 읽는다. )
+            data.add(new Listitem(R.drawable.n1, "ph : ", "매우 좋음", insideObject.getString("item4") + "ph"));
+            data.add(new Listitem(R.drawable.n2, "탁도 : ", "매우 좋음", insideObject.getString("item5") + "NTU"));
+            data.add(new Listitem(R.drawable.n3, "잔류염소 : ", "매우 좋음", insideObject.getString("item6") + "mg/L"));
+            data.add(new Listitem(R.drawable.n4, "날짜", "", insideObject.getString("mesurede")));
 
-                // StringBuffer 메소드 ( append : StringBuffer 인스턴스에 뒤에 덧붙인다. )
-                // JSONObject 메소드 ( get.String(), getInt(), getBoolean() .. 등 : 객체로부터 데이터의 타입에 따라 원하는 데이터를 읽는다. )
-
-                items.add(insideObject.getString("item1"));
-                items.add(insideObject.getString("item2"));
-                items.add(insideObject.getString("item3"));
-                items.add(insideObject.getString("item4"));
-                items.add(insideObject.getString("item5"));
-                items.add(insideObject.getString("item6"));
-                items.add(insideObject.getString("mesurede"));
-
-
-                sb.append("맛 : ").append(insideObject.getString("item1")).append("\n");
-                sb.append("냄새 : ").append(insideObject.getString("item2")).append("\n");
-                sb.append("색도 : ").append(insideObject.getString("item3")).append("\n");
-                sb.append("pH : ").append(insideObject.getString("item4")).append("pH\n");
-                sb.append("탁도 : ").append(insideObject.getString("item5")).append("NTU\n");
-                sb.append("잔류염소 : ").append(insideObject.getString("item6")).append("mg/L\n");
-                sb.append("날짜 : ").append(insideObject.getString("mesurede")).append("\n");
-                // for
-            }
+            // for
         } catch (JSONException e) {
             e.printStackTrace();
         } catch (Exception e) {
@@ -228,7 +206,7 @@ public class parsingJson extends AppCompatActivity {
     public String getStringFromUrl(String url) throws UnsupportedEncodingException {
 
         // 입력스트림을 "UTF-8" 를 사용해서 읽은 후, 라인 단위로 데이터를 읽을 수 있는 BufferedReader 를 생성한다.
-        BufferedReader br = new BufferedReader(new InputStreamReader(getInputStreamFromUrl(url), "UTF-8"));
+        BufferedReader br = new BufferedReader(new InputStreamReader(getInputStreamFromUrl(url), "UTF-8"),8);
 
         // 읽은 데이터를 저장한 StringBuffer 를 생성한다.
         StringBuffer sb = new StringBuffer();
@@ -268,7 +246,8 @@ public class parsingJson extends AppCompatActivity {
         } // doInBackground : 백그라운드 작업을 진행한다.
         @Override
         protected void onPostExecute(String result) {
-            tv.setText(result);
+//            tv.setText(result);
+            mAdapter.notifyDataSetChanged();
             mDialog.dismiss();
         } // onPostExecute : 백그라운드 작업이 끝난 후 UI 작업을 진행한다.
     } // JsonLoadingTask

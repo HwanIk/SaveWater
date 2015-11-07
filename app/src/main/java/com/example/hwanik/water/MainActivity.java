@@ -77,10 +77,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        PurificationPlant_choice="311";
-        new JsonLoadingTask().execute();
-
-
         toolbar=(Toolbar)findViewById(R.id.toolBar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setElevation(4);
@@ -96,6 +92,8 @@ public class MainActivity extends AppCompatActivity {
 //        mViewPager = (ViewPager) findViewById(R.id.pager); 
 //        mViewPager.setAdapter(mCustomPagerAdapter);
 
+        PurificationPlant_choice="311";
+        new JsonLoadingTask().execute();
         loadChartData();
 
     }
@@ -223,11 +221,14 @@ public class MainActivity extends AppCompatActivity {
 
             // StringBuffer 메소드 ( append : StringBuffer 인스턴스에 뒤에 덧붙인다. )
             // JSONObject 메소드 ( get.String(), getInt(), getBoolean() .. 등 : 객체로부터 데이터의 타입에 따라 원하는 데이터를 읽는다. )
-
-            items.add(insideObject.getString("item4"));
-            items.add(insideObject.getString("item5"));
-            items.add(insideObject.getString("item6"));
+            if(insideObject.getString("item1")==null){
+                return null;
+            }else {
+                items.add(insideObject.getString("item4"));
+                items.add(insideObject.getString("item5"));
+                items.add(insideObject.getString("item6"));
 //                items.add(insideObject.getString("item7"));
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         } catch (Exception e) {
@@ -280,22 +281,30 @@ public class MainActivity extends AppCompatActivity {
         } // doInBackground : 백그라운드 작업을 진행한다.
         @Override
         protected void onPostExecute(String result) {
-            float n_ph = Float.parseFloat(items.get(0));
-            float n_tak = Float.parseFloat(items.get(1));
-            float n_zan = Float.parseFloat(items.get(2));
+            if(items.size()!=0) {
+                float n_ph = Float.parseFloat(items.get(0));
+                float n_tak = Float.parseFloat(items.get(1));
+                float n_zan = Float.parseFloat(items.get(2));
 
-            if( n_ph >= 5.8 && n_ph <= 8.5) ph.setText("매우 좋음");
-            else if ( n_ph < 5.8 && n_ph >= 8.5) ph.setText("보통");
+                if (n_ph >= 5.8 && n_ph <= 8.5) ph.setText("매우 좋음");
+                else if (n_ph < 5.8 && n_ph >= 8.5) ph.setText("보통");
 
-            if( n_tak < 0.3) tak.setText("매우 좋음");
-            else if( n_tak > 0.3 && n_tak <= 0.5 ) tak.setText("좋음");
-            else if( n_tak > 0.5 && n_tak <= 1.0 ) tak.setText("보통");
-            else if( n_tak > 1.0 ) tak.setText("나쁨");
+                if (n_tak < 0.3) tak.setText("매우 좋음");
+                else if (n_tak > 0.3 && n_tak <= 0.5) tak.setText("좋음");
+                else if (n_tak > 0.5 && n_tak <= 1.0) tak.setText("보통");
+                else if (n_tak > 1.0) tak.setText("나쁨");
 
-            if( n_zan >= 0.1 && n_zan < 1.0 ) zan.setText("매우 좋음");
-            else if( n_zan >= 1.0 && n_zan < 4.0 ) zan.setText("좋음");
-            else if( n_zan < 0.1 ) zan.setText("보통");
-            else if( n_zan > 4.0 ) zan.setText("나쁨");
+                if (n_zan >= 0.1 && n_zan < 1.0) zan.setText("매우 좋음");
+                else if (n_zan >= 1.0 && n_zan < 4.0) zan.setText("좋음");
+                else if (n_zan < 0.1) zan.setText("보통");
+                else if (n_zan > 4.0) zan.setText("나쁨");
+
+//                progressDialog.dismiss();
+            } else {
+                ph.setText("요청 수 초과");
+                tak.setText("요청 수 초과");
+                zan.setText("요청 수 초과");
+            }
         } // onPostExecute : 백그라운드 작업이 끝난 후 UI 작업을 진행한다.
     } // JsonLoadingTask
 

@@ -4,34 +4,34 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
-    android:gravity="center">
+    android:gravity="center_vertical">
     <ImageView
         android:id="@+id/number"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:layout_marginRight="10dp"
         android:src="@drawable/n3" />
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <TextView
             android:id="@+id/category"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="25sp"
+            android:textSize="20sp"
             android:text="pH : "/>
         <TextView
             android:id="@+id/status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="매우 좋음"
-            android:textSize="25sp"/>
+            android:textSize="20sp"/>
         <TextView
             android:id="@+id/data"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="right"
-            android:textSize="25sp"
+            android:textSize="20sp"
             android:text="8.5"/>
     </LinearLayout>
 </LinearLayout>

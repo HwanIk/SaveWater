@@ -27,7 +27,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10dp"
-                    android:text="집 근처 수질정보"
+                    android:text="수질정보"
                     android:textSize="20sp"
                     android:textStyle="bold"/>
                 <LinearLayout
@@ -85,7 +85,7 @@
                                 android:id="@+id/ph"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="ph"
+                                android:text="데이터 로드중.."
                                 android:textSize="15sp"/>
                         </LinearLayout>
                         <LinearLayout
@@ -109,7 +109,7 @@
                                 android:id="@+id/tak"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="탁도"
+                                android:text="데이터 로드중.."
                                 android:textSize="15sp"/>
                         </LinearLayout>
                         <LinearLayout
@@ -132,7 +132,7 @@
                                 android:id="@+id/zan"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="잔류 염소"
+                                android:text="데이터 로드중.."
                                 android:textSize="15sp"/>
                         </LinearLayout>
                     </LinearLayout>
@@ -147,9 +147,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10dp"
-                    android:text="국가별 1인 급수량"
+                    android:text="1인 물사용량 / 1일"
                     android:textSize="20sp"
                     android:textStyle="bold"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:text="출처 : 한국수자원공사"/>
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="170dp"

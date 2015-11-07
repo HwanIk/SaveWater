@@ -16,8 +16,6 @@ public class Splash extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        Parse.initialize(this, "Zkc49yMNCkGOlDxjsrOVhNWOqSpabFIxohQLoNd3", "lWU2pMiQ2o3hcyFudIRWGhc34l6kBtmNPw2UbSpi");
-
         ParseUser currentUser = ParseUser.getCurrentUser();
         if (currentUser != null) {
             // do stuff with the user

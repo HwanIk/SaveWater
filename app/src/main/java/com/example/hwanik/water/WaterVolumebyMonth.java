@@ -65,7 +65,7 @@ public class WaterVolumebyMonth extends AppCompatActivity {
 
         chart[0] = (BarChart) findViewById(R.id.chart);
         chart[1] = (BarChart) findViewById(R.id.chart1);
-        chart[2] = (BarChart) findViewById(R.id.chart2);
+//        chart[2] = (BarChart) findViewById(R.id.chart2);
         volumeEntries = new ArrayList<>();
         sPriceEntries = new ArrayList<>();
         gPriceEntries = new ArrayList<>();
@@ -104,7 +104,7 @@ public class WaterVolumebyMonth extends AppCompatActivity {
                                 e1.printStackTrace();
                             }
                         }
-                        for (int i = 0; i < 3; i++) {
+                        for (int i = 0; i < 2; i++) {
                             data[i] = new BarData(labels, dataset[i]);
                             chart[i].setData(data[i]);
                             chart[i].invalidate();
@@ -120,13 +120,13 @@ public class WaterVolumebyMonth extends AppCompatActivity {
             }
         });
 
-        dataset[0] = new BarDataSet(volumeEntries, "물 사용량");
-        dataset[1] = new BarDataSet(sPriceEntries, "세대 요금");
+        dataset[0] = new BarDataSet(volumeEntries, "물 사용량(m³)");
+        dataset[1] = new BarDataSet(sPriceEntries, "세대 요금(원)");
         dataset[1].setColor(Color.parseColor("#FFF6FF49"));
-        dataset[2] = new BarDataSet(gPriceEntries, "공용 요금");
-        dataset[2].setColor(Color.parseColor("#FFFF9100"));
+//        dataset[2] = new BarDataSet(gPriceEntries, "공용 요금");
+//        dataset[2].setColor(Color.parseColor("#FFFF9100"));
         data[0] = new BarData(labels, dataset[0]);
-        for(int i=0;i<3;i++) {
+        for(int i=0;i<2;i++) {
             chart[i].setData(data[0]);
             chart[i].setDescription("");
         }
@@ -239,9 +239,11 @@ public class WaterVolumebyMonth extends AppCompatActivity {
                 .positiveText("추가")
                 .negativeText("취소");
         MaterialDialog mDialog = dialogBuilder.build();
+
         waterSPrice=(EditText)mDialog.findViewById(R.id.sPrice);
         waterGPrice=(EditText)mDialog.findViewById(R.id.gPrice);
         waterVolume=(EditText)mDialog.findViewById(R.id.waterVolume);
+
         yearPicker=(NumberPicker)mDialog.findViewById(R.id.year);
         monthPicker=(NumberPicker)mDialog.findViewById(R.id.month);
         yearPicker.setMaxValue(2020);
@@ -251,13 +253,14 @@ public class WaterVolumebyMonth extends AppCompatActivity {
         monthPicker.setMaxValue(12);
         monthPicker.setMinValue(1);
         monthPicker.setWrapSelectorWheel(false);
+
         dialogBuilder.onPositive(new MaterialDialog.SingleButtonCallback() {
             @Override
             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                volumeEntries.set(monthPicker.getValue() - 1, new BarEntry(Integer.parseInt(waterVolume.getText().toString()), monthPicker.getValue() - 1));
-                sPriceEntries.set(monthPicker.getValue() - 1, new BarEntry(Integer.parseInt(waterSPrice.getText().toString()), monthPicker.getValue() - 1));
-                gPriceEntries.set(monthPicker.getValue() - 1, new BarEntry(Integer.parseInt(waterGPrice.getText().toString()), monthPicker.getValue() - 1));
-                for (int i = 0; i < 3; i++) {
+                volumeEntries.set(monthPicker.getValue() - 1, new BarEntry(getDataByDay(waterVolume.getText().toString()), monthPicker.getValue() - 1));
+                sPriceEntries.set(monthPicker.getValue() - 1, new BarEntry(getDataByDay(waterSPrice.getText().toString()), monthPicker.getValue() - 1));
+                gPriceEntries.set(monthPicker.getValue() - 1, new BarEntry(getDataByDay(waterGPrice.getText().toString()), monthPicker.getValue() - 1));
+                for (int i = 0; i < 2; i++) {
                     data[i] = new BarData(labels, dataset[i]);
                     chart[i].setData(data[i]);
                     chart[i].invalidate();
@@ -265,6 +268,22 @@ public class WaterVolumebyMonth extends AppCompatActivity {
             }
         });
         mDialog.show();
+    }
+    public int getDataByDay(String s){
+        int data;
+        int days;
 
+        if((monthPicker.getValue())%2==1){
+            days=31;
+        } else {
+            days=30;
+        }
+
+        if(s.equals("")){
+            data=0;
+        }else{
+            data=Integer.parseInt(s)/days;
+        }
+        return data;
     }
 }
