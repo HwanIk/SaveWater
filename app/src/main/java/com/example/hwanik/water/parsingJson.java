@@ -67,6 +67,10 @@ public class parsingJson extends AppCompatActivity {
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, PurificationPlant);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
+        items = (ArrayList<String>) getIntent().getSerializableExtra("data");
+
+
+
         dialogBuilder = new MaterialDialog.Builder(parsingJson.this);
         dialogBuilder.title("데이터 로드중..")
                 .content("잠시만 기다려주세요")
@@ -96,7 +100,14 @@ public class parsingJson extends AppCompatActivity {
         mAdapter.notifyDataSetChanged();
         lv.setAdapter(mAdapter);
 
-        new JsonLoadingTask().execute();
+        data.add(new Listitem(R.drawable.n1, "ph : ", "매우 좋음", items.get(0)));
+        data.add(new Listitem(R.drawable.n2, "탁도 : ", "매우 좋음", items.get(1)));
+        data.add(new Listitem(R.drawable.n3, "잔류염소 : ", "매우 좋음", items.get(2)));
+        data.add(new Listitem(R.drawable.n4, "날짜", "", items.get(3)));
+        mAdapter.notifyDataSetChanged();
+
+        mDialog.dismiss();
+//        new JsonLoadingTask().execute();
     }
     public class Listitem{
         int imgId;
@@ -118,8 +129,6 @@ public class parsingJson extends AppCompatActivity {
             super();
             this.context=context;
             this.list=list;
-            Log.d("zz", String.valueOf(list.size()));
-            Toast.makeText(parsingJson.this, String.valueOf(list.size()), Toast.LENGTH_SHORT).show();
         }
         @Override
         public int getCount() {
@@ -247,8 +256,11 @@ public class parsingJson extends AppCompatActivity {
         @Override
         protected void onPostExecute(String result) {
 //            tv.setText(result);
-            mAdapter.notifyDataSetChanged();
-            mDialog.dismiss();
+            if(data.size()!=0) {
+                mAdapter.notifyDataSetChanged();
+            }else{
+                new JsonLoadingTask().execute();
+            }
         } // onPostExecute : 백그라운드 작업이 끝난 후 UI 작업을 진행한다.
     } // JsonLoadingTask
 }

@@ -12,6 +12,6 @@
         android:id="@+id/update"
         android:orderInCategory="100"
         android:title="update"
-        android:icon="@drawable/update"
+        android:icon="@drawable/upload"
         app:showAsAction="ifRoom"/>
 </menu>

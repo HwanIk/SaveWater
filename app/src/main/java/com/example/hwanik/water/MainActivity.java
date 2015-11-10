@@ -14,19 +14,21 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.utils.ColorTemplate;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -51,8 +53,12 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     Toolbar toolbar;
+    MaterialDialog.Builder dialogBuilder;
+    MaterialDialog mDialog;
 
-    //차트 그리기에 관련된 변
+    //차트 그리기에 관련된 변수
+    LineChart mChart;
+
     ArrayList<BarEntry> volumeEntries;
     BarChart chart;
     BarData data;
@@ -88,23 +94,24 @@ public class MainActivity extends AppCompatActivity {
         mCustomPagerAdapter = new CustomPagerAdapter(this);
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mCustomPagerAdapter);
-//        mCustomPagerAdapter = new CustomPagerAdapter(this);  
-//        mViewPager = (ViewPager) findViewById(R.id.pager); 
-//        mViewPager.setAdapter(mCustomPagerAdapter);
-
+//
         PurificationPlant_choice="311";
-        new JsonLoadingTask().execute();
-        loadChartData();
 
+        dialogBuilder = new MaterialDialog.Builder(MainActivity.this);
+        dialogBuilder.title("데이터 로드중..")
+                .content("잠시만 기다려주세요")
+                .progress(true, 0);
+        mDialog = dialogBuilder.build();
+        mDialog.show();
+
+        refresh();
     }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        // Inflate the menu; this adds items to the action bar if it is present. 
+        getMenuInflater().inflate(R.menu.menu_main,menu);
         return true;
     }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -123,18 +130,131 @@ public class MainActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+    private void LineChartSet() {
+        //linechart set
+        mChart = (LineChart) findViewById(R.id.chart1);
+
+        mChart.setDrawGridBackground(false); // 그래프 회색 바탕
+        mChart.setDescription("");
+        mChart.setDrawBorders(false); // 그래프 겉 테두리
+
+//        mChart.getAxisLeft().setDrawAxisLine(true); 좌측 y축 일자선
+//        mChart.getAxisLeft().setDrawGridLines(true); 데이터 가로선
+        mChart.getAxisRight().setDrawAxisLine(false);
+        mChart.getXAxis().setDrawAxisLine(false);
+        mChart.getXAxis().setDrawGridLines(false); // 데이터 세로선
+
+        // enable touch gestures
+        mChart.setTouchEnabled(true);
+
+        // enable scaling and dragging
+        mChart.setDragEnabled(true);
+        mChart.setScaleEnabled(true);
+
+        // if disabled, scaling can be done on x- and y-axis separately
+        mChart.setPinchZoom(false);
+
+        generateLineData();
+        Legend l = mChart.getLegend();
+        l.setPosition(Legend.LegendPosition.RIGHT_OF_CHART);
+    }
+
+    private void generateLineData() {
+        mChart.resetTracking();
+
+        final ArrayList<LineDataSet> dataSets = new ArrayList<LineDataSet>();
+
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("UserWaterData");
+        query.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> list, com.parse.ParseException e) {
+                int maxIndex = 0,myIndex=0,minIndex=0;
+                int maxWV=0,minWV=0;
+                maxWV = (int) list.get(0).get("TotalWaterVolumes");
+                minWV = (int) list.get(0).get("TotalWaterVolumes");
+                for (int i = 0; i < list.size(); i++) {
+                    int tmp=Integer.parseInt(list.get(i).get("TotalWaterVolumes").toString());
+                    if(list.get(i).get("user").equals(ParseUser.getCurrentUser().getObjectId())){
+                        myIndex=i;
+                    }
+                    if (maxWV < tmp) {
+                        maxIndex = i;
+                        maxWV = tmp;
+                    }
+                    if (minWV > tmp){
+                        minIndex = i;
+                        minWV = tmp;
+                    }
+                }
+
+                JSONArray maxArray = (JSONArray) list.get(maxIndex).getJSONArray("waterVolumes");
+                JSONArray minArray = (JSONArray) list.get(minIndex).getJSONArray("waterVolumes");
+                JSONArray myArray = (JSONArray) list.get(myIndex).getJSONArray("waterVolumes");
+
+                DrawLineChart("maxUser",maxIndex,maxArray,dataSets);
+                DrawLineChart("my",myIndex,myArray,dataSets);
+                DrawLineChart("minUser",minIndex,minArray,dataSets);
+
+            }
+        });
+    }
+
+    private void DrawLineChart(String name, int index, JSONArray tmp, ArrayList<LineDataSet> dataSets) {
+        ArrayList<Entry> values = new ArrayList<Entry>();
+
+        final ArrayList<String> xVals = new ArrayList<String>();
+        for (int i = 0; i < 12; i++) {
+            xVals.add((i) + "월");
+        }
+
+        for (int j = 0; j < 12; j++) {
+            try {
+                values.add(new Entry(tmp.getInt(j), j));
+            } catch (JSONException e1) {}
+        }
+
+        LineDataSet d = new LineDataSet(values, name);
+        d.setLineWidth(2.5f);
+        d.setCircleSize(4f);
+
+        int color = mColors[ index % mColors.length];
+        d.setColor(color);
+        d.setCircleColor(color);
+        dataSets.add(d);
+        // make the first DataSet dashed
+//                dataSets.get(0).enableDashedLine(10, 10, 0);
+//                dataSets.get(0).setColors(ColorTemplate.VORDIPLOM_COLORS);
+//                dataSets.get(0).setCircleColors(ColorTemplate.VORDIPLOM_COLORS);
+
+        //                dataSets.add(userAverage(list));
+        LineData data = new LineData(xVals, dataSets);
+        mChart.setData(data);
+        mChart.invalidate();
+    }
+
+    private LineDataSet userAverage(List<ParseObject> list) {
+        ArrayList<Entry> values = new ArrayList<Entry>();
+        int sum[]=new int[12];
+        for(int i=0;i<list.size();i++) {
+            JSONArray tmp = (JSONArray) list.get(i).getJSONArray("waterVolumes");
+            for(int j=0;j<12;j++){
+                try {
+                    sum[j]+=tmp.getInt(j);
+                } catch (JSONException e) {}
+            }
+        }
+        for(int i=0;i<12;i++) values.add(new Entry(sum[i]/=3,i));
+        LineDataSet d = new LineDataSet(values, "Average");
+        return d;
+    }
+    private int[] mColors = new int[] {
+            ColorTemplate.VORDIPLOM_COLORS[0],
+            ColorTemplate.VORDIPLOM_COLORS[1],
+            ColorTemplate.VORDIPLOM_COLORS[2]
+    };
 
     private void refresh() {
-        MaterialDialog.Builder dialogBuilder;
-        MaterialDialog mDialog;
-        dialogBuilder = new MaterialDialog.Builder(MainActivity.this);
-        dialogBuilder.title("데이터 로드중..")
-                .content("잠시만 기다려주세요")
-                .progress(true, 0);
-        mDialog = dialogBuilder.build();
-        mDialog.show();
-
-        loadChartData();
+        LineChartSet();
         new JsonLoadingTask().execute();
 
         mDialog.dismiss();
@@ -147,48 +267,49 @@ public class MainActivity extends AppCompatActivity {
         finish();
     }
 
-    private void loadChartData() {
+//    private void loadChartData() {
+//
+//        chart = (BarChart) findViewById(R.id.chart);
+//        volumeEntries = new ArrayList<>();
+//        labels = new ArrayList<String>();
+//        for(int i=0;i<12;i++) {
+//            volumeEntries.add(new BarEntry(0, i));
+//            labels.add((i+1)+"월");
+//        }
+//
+//        ParseQuery<ParseObject> query = ParseQuery.getQuery("UserWaterData");
+//        query.whereEqualTo("user", ParseUser.getCurrentUser().getObjectId());
+//        query.findInBackground(new FindCallback<ParseObject>() {
+//            public void done(List<ParseObject> waterVolumes, ParseException e) {
+//                if (e == null) {
+//                    if (waterVolumes.size() != 0) {
+//                        JSONArray tmp = new JSONArray();
+//                        tmp = (JSONArray) waterVolumes.get(0).getJSONArray("waterVolumes");
+//                        for (int i = 0; i < 12; i++) {
+//                            try {
+//                                volumeEntries.set(i, new BarEntry(tmp.getInt(i), i));
+//                            } catch (JSONException e1) {
+//                                e1.printStackTrace();
+//                            }
+//                        }
+//                        data = new BarData(labels, dataset);
+//                        chart.setData(data);
+//                        chart.invalidate();
+//                    } else {
+//
+//                    }
+//                } else {
+//                    Log.d("UserWaterData", "Error: " + e.getMessage());
+//                }
+//            }
+//        });
+//
+//        dataset = new BarDataSet(volumeEntries, "물 사용량");
+//        data = new BarData(labels, dataset);
+//        chart.setData(data);
+//        chart.setDescription("");
+//    }
 
-        chart = (BarChart) findViewById(R.id.chart);
-        volumeEntries = new ArrayList<>();
-        labels = new ArrayList<String>();
-        for(int i=0;i<12;i++) {
-            volumeEntries.add(new BarEntry(0, i));
-            labels.add((i+1)+"월");
-        }
-
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("UserWaterData");
-        query.whereEqualTo("user", ParseUser.getCurrentUser().getObjectId());
-        query.findInBackground(new FindCallback<ParseObject>() {
-            public void done(List<ParseObject> waterVolumes, ParseException e) {
-                if (e == null) {
-                    if (waterVolumes.size() != 0) {
-                        JSONArray tmp = new JSONArray();
-                        tmp = (JSONArray) waterVolumes.get(0).getJSONArray("waterVolumes");
-                        for (int i = 0; i < 12; i++) {
-                            try {
-                                volumeEntries.set(i, new BarEntry(tmp.getInt(i), i));
-                            } catch (JSONException e1) {
-                                e1.printStackTrace();
-                            }
-                        }
-                        data = new BarData(labels, dataset);
-                        chart.setData(data);
-                        chart.invalidate();
-                    } else {
-
-                    }
-                } else {
-                    Log.d("UserWaterData", "Error: " + e.getMessage());
-                }
-            }
-        });
-
-        dataset = new BarDataSet(volumeEntries, "물 사용량");
-        data = new BarData(labels, dataset);
-        chart.setData(data);
-        chart.setDescription("");
-    }
     public String getJsonText() {
 
         // 내부적으로 문자열 편집이 가능한 StringBuffer 생성자
@@ -227,7 +348,7 @@ public class MainActivity extends AppCompatActivity {
                 items.add(insideObject.getString("item4"));
                 items.add(insideObject.getString("item5"));
                 items.add(insideObject.getString("item6"));
-//                items.add(insideObject.getString("item7"));
+                items.add(insideObject.getString("mesurede"));
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -301,9 +422,10 @@ public class MainActivity extends AppCompatActivity {
 
 //                progressDialog.dismiss();
             } else {
-                ph.setText("요청 수 초과");
-                tak.setText("요청 수 초과");
-                zan.setText("요청 수 초과");
+                ph.setText("데이터 요청중..");
+                tak.setText("데이터 요청중..");
+                zan.setText("데이터 요청중..");
+                new JsonLoadingTask().execute();
             }
         } // onPostExecute : 백그라운드 작업이 끝난 후 UI 작업을 진행한다.
     } // JsonLoadingTask
@@ -354,6 +476,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void goToParsingJson(View view) {
         Intent intent = new Intent(MainActivity.this,parsingJson.class);
+        intent.putExtra("data", items);
         startActivity(intent);
     }
     public void goToWVM(View view) {

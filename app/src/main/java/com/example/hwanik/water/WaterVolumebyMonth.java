@@ -40,6 +40,7 @@ public class WaterVolumebyMonth extends AppCompatActivity {
     BarChart[] chart = new BarChart[3];
     BarData[] data = new BarData[3];
     BarDataSet[] dataset = new BarDataSet[3];
+    int TotalWaterVolumes;
     ArrayList<BarEntry> volumeEntries;
     ArrayList<BarEntry> sPriceEntries;
     ArrayList<BarEntry> gPriceEntries;
@@ -53,6 +54,8 @@ public class WaterVolumebyMonth extends AppCompatActivity {
     MaterialDialog.Builder dialogBuilder1;
     MaterialDialog mDialog1;
 
+    int userFmailyNumber;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,6 +65,7 @@ public class WaterVolumebyMonth extends AppCompatActivity {
         getSupportActionBar().setElevation(4);
         setTitle("월 별 물 사용량");
 
+        userFmailyNumber=Integer.parseInt(ParseUser.getCurrentUser().get("FamilyMember").toString());
 
         chart[0] = (BarChart) findViewById(R.id.chart);
         chart[1] = (BarChart) findViewById(R.id.chart1);
@@ -182,6 +186,7 @@ public class WaterVolumebyMonth extends AppCompatActivity {
                                     JSONArray waterGPrice = new JSONArray();
                                     for (int i = 0; i < 12; i++) {
                                         try {
+                                            TotalWaterVolumes+=volumeEntries.get(i).getVal();
                                             waterVolumes.put(volumeEntries.get(i).getVal());
                                             waterSPrice.put(sPriceEntries.get(i).getVal());
                                             waterGPrice.put(gPriceEntries.get(i).getVal());
@@ -192,6 +197,7 @@ public class WaterVolumebyMonth extends AppCompatActivity {
                                     data.put("waterVolumes", waterVolumes);
                                     data.put("waterSPrice", waterSPrice);
                                     data.put("waterGPrice", waterGPrice);
+                                    data.put("TotalWaterVolumes",TotalWaterVolumes);
                                     data.saveInBackground();
                                 }
                             }
@@ -206,6 +212,7 @@ public class WaterVolumebyMonth extends AppCompatActivity {
                         data.put("user", ParseUser.getCurrentUser().getObjectId().toString());
                         for (int i = 0; i < 12; i++) {
                             try {
+                                TotalWaterVolumes+=volumeEntries.get(i).getVal();
                                 waterVolumes.put(volumeEntries.get(i).getVal());
                                 waterSPrice.put(sPriceEntries.get(i).getVal());
                                 waterGPrice.put(gPriceEntries.get(i).getVal());
@@ -216,6 +223,7 @@ public class WaterVolumebyMonth extends AppCompatActivity {
                         data.put("waterVolumes", waterVolumes);
                         data.put("waterSPrice", waterSPrice);
                         data.put("waterGPrice", waterGPrice);
+                        data.put("TotalWaterVolumes",TotalWaterVolumes);
                         data.saveInBackground();
                     }
                 } else {
@@ -282,7 +290,7 @@ public class WaterVolumebyMonth extends AppCompatActivity {
         if(s.equals("")){
             data=0;
         }else{
-            data=Integer.parseInt(s)/days;
+            data=Integer.parseInt(s)/days/userFmailyNumber;
         }
         return data;
     }
