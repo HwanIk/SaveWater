@@ -140,14 +140,33 @@
                 <View
                     android:layout_width="fill_parent"
                     android:layout_height="1dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp"
-                    android:background="#bab8b5" />
+                    android:layout_marginTop="15dp"
+                    android:layout_marginBottom="15dp"
+                    android:background="#958f89" />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10dp"
                     android:text="1인 물사용량 / 1일"
+                    android:textSize="20sp"
+                    android:textStyle="bold"/>
+                <com.github.mikephil.charting.charts.LineChart
+                    android:id="@+id/chart1"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:onClick="goToWVM"/>
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginBottom="15dp"
+                    android:background="#958f89" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:text="국가별 급수량"
                     android:textSize="20sp"
                     android:textStyle="bold"/>
                 <TextView
@@ -160,30 +179,11 @@
                     android:layout_height="170dp"
                     android:src="@drawable/img"
                     android:onClick="goToWaterData"/>
-                <View
-                    android:layout_width="fill_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp"
-                    android:background="#bab8b5" />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp"
-                    android:text="월별 물 사용량"
-                    android:textSize="20sp"
-                    android:textStyle="bold"/>
                 <!--<com.github.mikephil.charting.charts.BarChart-->
                     <!--android:id="@+id/chart"-->
                     <!--android:layout_width="match_parent"-->
                     <!--android:layout_height="200dp"-->
                     <!--android:onClick="goToWVM"/>-->
-                <com.github.mikephil.charting.charts.LineChart
-                    android:id="@+id/chart1"
-                    android:layout_width="match_parent"
-                    android:layout_height="200dp"
-                    android:onClick="goToWVM"/>
             </LinearLayout>
         </ScrollView>
     </FrameLayout>

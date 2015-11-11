@@ -168,7 +168,7 @@ public class MainActivity extends AppCompatActivity {
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> list, com.parse.ParseException e) {
-                int maxIndex = 0,myIndex=0,minIndex=0;
+                int maxIndex = -1,myIndex=-1,minIndex=-1;
                 int maxWV=0,minWV=0;
                 maxWV = (int) list.get(0).get("TotalWaterVolumes");
                 minWV = (int) list.get(0).get("TotalWaterVolumes");
@@ -186,15 +186,18 @@ public class MainActivity extends AppCompatActivity {
                         minWV = tmp;
                     }
                 }
-
-                JSONArray maxArray = (JSONArray) list.get(maxIndex).getJSONArray("waterVolumes");
-                JSONArray minArray = (JSONArray) list.get(minIndex).getJSONArray("waterVolumes");
-                JSONArray myArray = (JSONArray) list.get(myIndex).getJSONArray("waterVolumes");
-
-                DrawLineChart("maxUser",maxIndex,maxArray,dataSets);
-                DrawLineChart("my",myIndex,myArray,dataSets);
-                DrawLineChart("minUser",minIndex,minArray,dataSets);
-
+                if(maxIndex!=-1) {
+                    JSONArray maxArray = (JSONArray) list.get(maxIndex).getJSONArray("waterVolumes");
+                    DrawLineChart("maxUser",maxIndex,maxArray,dataSets);
+                }
+                if(myIndex!=-1) {
+                    JSONArray myArray = (JSONArray) list.get(myIndex).getJSONArray("waterVolumes");
+                    DrawLineChart("my",myIndex,myArray,dataSets);
+                }
+                if(minIndex!=-1) {
+                    JSONArray minArray = (JSONArray) list.get(minIndex).getJSONArray("waterVolumes");
+                    DrawLineChart("minUser",minIndex,minArray,dataSets);
+                }
             }
         });
     }
@@ -230,6 +233,7 @@ public class MainActivity extends AppCompatActivity {
         LineData data = new LineData(xVals, dataSets);
         mChart.setData(data);
         mChart.invalidate();
+        mDialog.dismiss();
     }
 
     private LineDataSet userAverage(List<ParseObject> list) {
@@ -247,6 +251,7 @@ public class MainActivity extends AppCompatActivity {
         LineDataSet d = new LineDataSet(values, "Average");
         return d;
     }
+    
     private int[] mColors = new int[] {
             ColorTemplate.VORDIPLOM_COLORS[0],
             ColorTemplate.VORDIPLOM_COLORS[1],
@@ -254,10 +259,9 @@ public class MainActivity extends AppCompatActivity {
     };
 
     private void refresh() {
+        mDialog.show();
         LineChartSet();
         new JsonLoadingTask().execute();
-
-        mDialog.dismiss();
     }
 
     private void logout() {

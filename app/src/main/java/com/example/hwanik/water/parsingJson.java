@@ -100,13 +100,12 @@ public class parsingJson extends AppCompatActivity {
         mAdapter.notifyDataSetChanged();
         lv.setAdapter(mAdapter);
 
-        data.add(new Listitem(R.drawable.n1, "ph : ", "매우 좋음", items.get(0)));
-        data.add(new Listitem(R.drawable.n2, "탁도 : ", "매우 좋음", items.get(1)));
-        data.add(new Listitem(R.drawable.n3, "잔류염소 : ", "매우 좋음", items.get(2)));
+        data.add(new Listitem(R.drawable.n1, "ph", "매우 좋음", items.get(0)));
+        data.add(new Listitem(R.drawable.n2, "탁도", "매우 좋음", items.get(1)));
+        data.add(new Listitem(R.drawable.n3, "잔류염소", "매우 좋음", items.get(2)));
         data.add(new Listitem(R.drawable.n4, "날짜", "", items.get(3)));
         mAdapter.notifyDataSetChanged();
 
-        mDialog.dismiss();
 //        new JsonLoadingTask().execute();
     }
     public class Listitem{
@@ -197,10 +196,29 @@ public class parsingJson extends AppCompatActivity {
             // bodylist 배열안에 내부 JSON 이므로 JSON 내부 객체 생성
             JSONObject insideObject = Array.getJSONObject(0);
 
+            float n_ph = Float.parseFloat(insideObject.getString("item4"));
+            float n_tak = Float.parseFloat(insideObject.getString("item5"));
+            float n_zan = Float.parseFloat(insideObject.getString("item6"));
+
+            String status1 = null,status2 = null,status3 = null;
+
+            if (n_ph >= 5.8 && n_ph <= 8.5) status1="매우 좋음";
+            else if (n_ph < 5.8 && n_ph >= 8.5) status1="보통";
+
+            if (n_tak < 0.3) status2="매우 좋음";
+            else if (n_tak > 0.3 && n_tak <= 0.5) status2="좋음";
+            else if (n_tak > 0.5 && n_tak <= 1.0) status2="보통";
+            else if (n_tak > 1.0) status2="나쁨";
+
+            if (n_zan >= 0.1 && n_zan < 1.0) status3="매우 좋음";
+            else if (n_zan >= 1.0 && n_zan < 4.0) status3="좋음";
+            else if (n_zan < 0.1) status3="보통";
+            else if (n_zan > 4.0) status3="나쁨";
+
             // JSONObject 메소드 ( get.String(), getInt(), getBoolean() .. 등 : 객체로부터 데이터의 타입에 따라 원하는 데이터를 읽는다. )
-            data.add(new Listitem(R.drawable.n1, "ph : ", "매우 좋음", insideObject.getString("item4") + "ph"));
-            data.add(new Listitem(R.drawable.n2, "탁도 : ", "매우 좋음", insideObject.getString("item5") + "NTU"));
-            data.add(new Listitem(R.drawable.n3, "잔류염소 : ", "매우 좋음", insideObject.getString("item6") + "mg/L"));
+            data.add(new Listitem(R.drawable.n1, "ph", status1, insideObject.getString("item4") + "ph"));
+            data.add(new Listitem(R.drawable.n2, "탁도", status2, insideObject.getString("item5") + "NTU"));
+            data.add(new Listitem(R.drawable.n3, "잔류염소", status3, insideObject.getString("item6") + "mg/L"));
             data.add(new Listitem(R.drawable.n4, "날짜", "", insideObject.getString("mesurede")));
 
             // for
@@ -258,6 +276,7 @@ public class parsingJson extends AppCompatActivity {
 //            tv.setText(result);
             if(data.size()!=0) {
                 mAdapter.notifyDataSetChanged();
+                mDialog.dismiss();
             }else{
                 new JsonLoadingTask().execute();
             }

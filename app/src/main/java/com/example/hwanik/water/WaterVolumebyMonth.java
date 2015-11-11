@@ -63,7 +63,7 @@ public class WaterVolumebyMonth extends AppCompatActivity {
         toolbar=(Toolbar)findViewById(R.id.toolBar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setElevation(4);
-        setTitle("월 별 물 사용량");
+        setTitle("월 별 수도내역");
 
         userFmailyNumber=Integer.parseInt(ParseUser.getCurrentUser().get("FamilyMember").toString());
 

@@ -16,16 +16,18 @@
         android:layout_height="wrap_content">
         <TextView
             android:id="@+id/category"
-            android:layout_width="wrap_content"
+            android:layout_width="90dp"
             android:layout_height="wrap_content"
             android:textSize="20sp"
-            android:text="pH : "/>
+            android:text="잔류염소"
+            android:textStyle="bold"/>
         <TextView
             android:id="@+id/status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="매우 좋음"
-            android:textSize="20sp"/>
+            android:textSize="20sp"
+            android:textColor="#ff5f00"/>
         <TextView
             android:id="@+id/data"
             android:layout_width="match_parent"
