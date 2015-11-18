@@ -22,6 +22,9 @@ import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
@@ -134,6 +137,64 @@ public class WaterVolumebyMonth extends AppCompatActivity {
             chart[i].setData(data[0]);
             chart[i].setDescription("");
         }
+
+        chart[0].setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
+            @Override
+            public void onValueSelected(final Entry e, int dataSetIndex, Highlight h) {
+                final int month=e.getXIndex();
+                final EditText waterSPrice;
+                final EditText waterGPrice;
+                final EditText waterVolume;
+                boolean wrapInScrollView = true;
+
+                MaterialDialog.Builder dialogBuilder = new MaterialDialog.Builder(WaterVolumebyMonth.this);
+                dialogBuilder.title((month+1)+"월 물 사용량, 물 값 수정")
+                        .customView(R.layout.edit_water_by_month, wrapInScrollView)
+                        .positiveText("수정")
+                        .negativeText("데이터 삭제");
+                MaterialDialog mDialog = dialogBuilder.build();
+
+                waterSPrice=(EditText)mDialog.findViewById(R.id.sPrice);
+                waterGPrice=(EditText)mDialog.findViewById(R.id.gPrice);
+                waterVolume=(EditText)mDialog.findViewById(R.id.waterVolume);
+
+                yearPicker=(NumberPicker)mDialog.findViewById(R.id.year);
+                monthPicker=(NumberPicker)mDialog.findViewById(R.id.month);
+
+                dialogBuilder.onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        volumeEntries.set(month, new BarEntry(getDataByDay(month+1,waterVolume.getText().toString()), month));
+                        sPriceEntries.set(month, new BarEntry(getDataByDay(month+1,waterSPrice.getText().toString()), month));
+                        gPriceEntries.set(month, new BarEntry(getDataByDay(month+1,waterGPrice.getText().toString()), month));
+                        for (int i = 0; i < 2; i++) {
+                            data[i] = new BarData(labels, dataset[i]);
+                            chart[i].setData(data[i]);
+                            chart[i].invalidate();
+                        }
+                    }
+                });
+                dialogBuilder.onNegative(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction) {
+                        volumeEntries.set(month, new BarEntry(0, month));
+                        sPriceEntries.set(month, new BarEntry(0, month));
+                        gPriceEntries.set(month, new BarEntry(0, month));
+                        for (int i = 0; i < 2; i++) {
+                            data[i] = new BarData(labels, dataset[i]);
+                            chart[i].setData(data[i]);
+                            chart[i].invalidate();
+                        }
+                    }
+                });
+                mDialog.show();
+            }
+
+            @Override
+            public void onNothingSelected() {
+
+            }
+        });
     }
 
     @Override
@@ -265,9 +326,9 @@ public class WaterVolumebyMonth extends AppCompatActivity {
         dialogBuilder.onPositive(new MaterialDialog.SingleButtonCallback() {
             @Override
             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                volumeEntries.set(monthPicker.getValue() - 1, new BarEntry(getDataByDay(waterVolume.getText().toString()), monthPicker.getValue() - 1));
-                sPriceEntries.set(monthPicker.getValue() - 1, new BarEntry(getDataByDay(waterSPrice.getText().toString()), monthPicker.getValue() - 1));
-                gPriceEntries.set(monthPicker.getValue() - 1, new BarEntry(getDataByDay(waterGPrice.getText().toString()), monthPicker.getValue() - 1));
+                volumeEntries.set(monthPicker.getValue() - 1, new BarEntry(getDataByDay(monthPicker.getValue(),waterVolume.getText().toString()), monthPicker.getValue() - 1));
+                sPriceEntries.set(monthPicker.getValue() - 1, new BarEntry(getDataByDay(monthPicker.getValue(),waterSPrice.getText().toString()), monthPicker.getValue() - 1));
+                gPriceEntries.set(monthPicker.getValue() - 1, new BarEntry(getDataByDay(monthPicker.getValue(),waterGPrice.getText().toString()), monthPicker.getValue() - 1));
                 for (int i = 0; i < 2; i++) {
                     data[i] = new BarData(labels, dataset[i]);
                     chart[i].setData(data[i]);
@@ -277,11 +338,11 @@ public class WaterVolumebyMonth extends AppCompatActivity {
         });
         mDialog.show();
     }
-    public int getDataByDay(String s){
+    public int getDataByDay(int month, String s){
         int data;
         int days;
 
-        if((monthPicker.getValue())%2==1){
+        if(month%2==1){
             days=31;
         } else {
             days=30;

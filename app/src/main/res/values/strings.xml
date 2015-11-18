@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Water</string>
+    <string name="app_name">수(水)가계부</string>
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
@@ -17,4 +17,5 @@
     <string name="err_msg_name">닉네임을 입력해주세요</string>
     <string name="err_msg_pwd">비밀번호를 입력해주세요</string>
     <string name="err_msg_fNum">거주인원을 입력해주세요</string>
+    <string name="tip"><u>닉네임을 잊어버리셨나요?</u></string>
 </resources>

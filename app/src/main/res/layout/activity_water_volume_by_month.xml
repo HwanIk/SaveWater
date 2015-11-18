@@ -24,7 +24,8 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
                     android:text="물 사용량"
-                    android:textSize="20sp"/>
+                    android:textSize="20sp"
+                    android:textStyle="bold"/>
                 <com.github.mikephil.charting.charts.BarChart
                     android:id="@+id/chart"
                     android:layout_width="match_parent"
@@ -35,7 +36,8 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
                     android:text="세대요금"
-                    android:textSize="20sp"/>
+                    android:textSize="20sp"
+                    android:textStyle="bold"/>
                 <com.github.mikephil.charting.charts.BarChart
                     android:id="@+id/chart1"
                     android:layout_width="match_parent"

@@ -186,15 +186,18 @@ public class MainActivity extends AppCompatActivity {
                         minWV = tmp;
                     }
                 }
-                if(maxIndex!=-1) {
+                if(maxIndex!=-1 ) {
+                    String name="maxUser";
                     JSONArray maxArray = (JSONArray) list.get(maxIndex).getJSONArray("waterVolumes");
                     DrawLineChart("maxUser",maxIndex,maxArray,dataSets);
                 }
                 if(myIndex!=-1) {
+                    String name="my";
                     JSONArray myArray = (JSONArray) list.get(myIndex).getJSONArray("waterVolumes");
                     DrawLineChart("my",myIndex,myArray,dataSets);
                 }
                 if(minIndex!=-1) {
+                    String name="minUser";
                     JSONArray minArray = (JSONArray) list.get(minIndex).getJSONArray("waterVolumes");
                     DrawLineChart("minUser",minIndex,minArray,dataSets);
                 }
@@ -251,7 +254,7 @@ public class MainActivity extends AppCompatActivity {
         LineDataSet d = new LineDataSet(values, "Average");
         return d;
     }
-    
+
     private int[] mColors = new int[] {
             ColorTemplate.VORDIPLOM_COLORS[0],
             ColorTemplate.VORDIPLOM_COLORS[1],
