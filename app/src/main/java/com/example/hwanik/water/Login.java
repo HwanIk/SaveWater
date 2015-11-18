@@ -31,6 +31,8 @@ public class Login extends AppCompatActivity {
     private TextView findName;
     private Button btnLogin;
     private Button goToSignUp;
+    MaterialDialog.Builder dialogBuilder;
+    MaterialDialog mDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +48,13 @@ public class Login extends AppCompatActivity {
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                dialogBuilder = new MaterialDialog.Builder(Login.this);
+                dialogBuilder.title("계정 확인중..")
+                        .content("잠시만 기다려주세요")
+                        .progress(true, 0);
+                mDialog = dialogBuilder.build();
+                mDialog.show();
+
                 ParseUser.logInInBackground(userEmail.getText().toString(), userPwd.getText().toString(), new LogInCallback() {
                     public void done(ParseUser user, ParseException e) {
                         if (user != null) {
@@ -56,6 +65,7 @@ public class Login extends AppCompatActivity {
                         } else {
                             Toast.makeText(Login.this,"아이디와 비밀번호를 확인해주세요.",Toast.LENGTH_SHORT).show();
                         }
+                        mDialog.dismiss();
                     }
                 });
             }
@@ -104,7 +114,6 @@ public class Login extends AppCompatActivity {
         boolean wrapInScrollView = true;
 
         final EditText email;
-        Button sendEmail;
 
         MaterialDialog.Builder dialogBuilder = new MaterialDialog.Builder(this);
         dialogBuilder.title("닉네임 찾기")
@@ -122,11 +131,11 @@ public class Login extends AppCompatActivity {
                 query.whereEqualTo("email", email.getText().toString());
                 query.findInBackground(new FindCallback<ParseUser>() {
                     public void done(List<ParseUser> list, ParseException e) {
-                        if(list.size() != 0 ){
-                            Toast.makeText(Login.this,"당신의 닉네임은 "+ list.get(0).get("username")+"입니다.",Toast.LENGTH_SHORT).show();
+                        if (list.size() != 0) {
+                            Toast.makeText(Login.this, "당신의 닉네임은 " + list.get(0).get("username") + "입니다.", Toast.LENGTH_SHORT).show();
                             userEmail.setText(String.valueOf(list.get(0).get("username")));
-                        }else{
-                            Toast.makeText(Login.this,"등록된 이메일이 없습니다.",Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(Login.this, "등록된 이메일이 아닙니다.", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });

@@ -6,12 +6,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
 import android.widget.EditText;
 import android.widget.NumberPicker;
 import android.widget.Toast;
@@ -142,42 +137,76 @@ public class WaterVolumebyMonth extends AppCompatActivity {
             @Override
             public void onValueSelected(final Entry e, int dataSetIndex, Highlight h) {
                 final int month=e.getXIndex();
-                final EditText waterSPrice;
-                final EditText waterGPrice;
                 final EditText waterVolume;
                 boolean wrapInScrollView = true;
 
                 MaterialDialog.Builder dialogBuilder = new MaterialDialog.Builder(WaterVolumebyMonth.this);
-                dialogBuilder.title((month+1)+"월 물 사용량, 물 값 수정")
+                dialogBuilder.title((month+1)+"월 물 사용량 수정")
                         .customView(R.layout.edit_water_by_month, wrapInScrollView)
                         .positiveText("수정")
                         .negativeText("데이터 삭제");
                 MaterialDialog mDialog = dialogBuilder.build();
 
-                waterSPrice=(EditText)mDialog.findViewById(R.id.sPrice);
-                waterGPrice=(EditText)mDialog.findViewById(R.id.gPrice);
                 waterVolume=(EditText)mDialog.findViewById(R.id.waterVolume);
-
-                yearPicker=(NumberPicker)mDialog.findViewById(R.id.year);
-                monthPicker=(NumberPicker)mDialog.findViewById(R.id.month);
 
                 dialogBuilder.onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                         volumeEntries.set(month, new BarEntry(getDataByDay(month+1,waterVolume.getText().toString()), month));
-                        sPriceEntries.set(month, new BarEntry(getDataByDay(month+1,waterSPrice.getText().toString()), month));
-                        gPriceEntries.set(month, new BarEntry(getDataByDay(month+1,waterGPrice.getText().toString()), month));
-                        for (int i = 0; i < 2; i++) {
-                            data[i] = new BarData(labels, dataset[i]);
-                            chart[i].setData(data[i]);
-                            chart[i].invalidate();
-                        }
+                        data[0] = new BarData(labels, dataset[0]);
+                        chart[0].setData(data[0]);
+                        chart[0].invalidate();
                     }
                 });
                 dialogBuilder.onNegative(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction) {
                         volumeEntries.set(month, new BarEntry(0, month));
+                        data[0] = new BarData(labels, dataset[0]);
+                        chart[0].setData(data[0]);
+                        chart[0].invalidate();
+                    }
+                });
+                mDialog.show();
+            }
+
+            @Override
+            public void onNothingSelected() {
+
+            }
+        });
+
+        chart[1].setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
+            @Override
+            public void onValueSelected(final Entry e, int dataSetIndex, Highlight h) {
+                final int month = e.getXIndex();
+                final EditText sPrice;
+                final EditText gPrice;
+                boolean wrapInScrollView = true;
+
+                MaterialDialog.Builder dialogBuilder = new MaterialDialog.Builder(WaterVolumebyMonth.this);
+                dialogBuilder.title((month + 1) + "월 수도요금 수정")
+                        .customView(R.layout.edit_price_by_month, wrapInScrollView)
+                        .positiveText("수정")
+                        .negativeText("데이터 삭제");
+                MaterialDialog mDialog = dialogBuilder.build();
+
+                sPrice = (EditText) mDialog.findViewById(R.id.sPrice);
+                gPrice = (EditText) mDialog.findViewById(R.id.gPrice);
+
+                dialogBuilder.onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        sPriceEntries.set(month, new BarEntry(getDataByDay(month + 1, sPrice.getText().toString()), month));
+                        gPriceEntries.set(month, new BarEntry(getDataByDay(month + 1, gPrice.getText().toString()), month));
+                        data[1] = new BarData(labels, dataset[1]);
+                        chart[1].setData(data[1]);
+                        chart[1].invalidate();
+                    }
+                });
+                dialogBuilder.onNegative(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction) {
                         sPriceEntries.set(month, new BarEntry(0, month));
                         gPriceEntries.set(month, new BarEntry(0, month));
                         for (int i = 0; i < 2; i++) {
