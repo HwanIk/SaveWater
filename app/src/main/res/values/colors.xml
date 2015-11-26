@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="login_bg_color">#FF00DDFF</color>
-    <color name="ColorPrimary">#00ccff</color>
+    <color name="ColorPrimary">#04b9c2</color>
     <color name="ColorPrimaryDark">#089bff</color>
+    <color name="hintNormalColor">#bfbfbf</color>
+    <color name="hintActiveColor1">#0d788b</color>
+    <color name="hintActiveColor2">#000000</color>
+    <color name="hintActiveColor3">#d9d9d9</color>
 </resources>

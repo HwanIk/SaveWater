@@ -1,13 +1,15 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.1" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.hwanik.water" >
+    android:versionCode="3"
+    android:versionName="1.0.1"
+    package="com.proj.hwanik.water">
 
     <!-- 구글 맵 퍼미션 -->
     <permission
-        android:name="com.example.hwanik.water.locationapi.maps.permission.MAPS_RECEIVE"
+        android:name="com.proj.hwanik.water.locationapi.maps.permission.MAPS_RECEIVE"
         android:protectionLevel="signature" />
 
-    <uses-permission android:name="com.example.hwanik.water.locationapi.maps.permission.MAPS_RECEIVE" />
+    <uses-permission android:name="com.proj.hwanik.water.locationapi.maps.permission.MAPS_RECEIVE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
@@ -55,12 +57,15 @@
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".DetailAd"
             android:label="@string/title_activity_detail_ad" >
+        </activity>
+        <activity android:name=".SettingUser" >
         </activity>
     </application>
 

@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".MainActivity"
+    tools:context="com.proj.hwanik.water.MainActivity"
     android:weightSum="100">
     <include
         android:id="@+id/toolBar"
@@ -21,164 +21,177 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:padding="16dp"
                 android:orientation="vertical">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:text="수질정보"
-                    android:textSize="20sp"
-                    android:textStyle="bold"/>
-                <LinearLayout
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:background="@drawable/main_section_border"
-                    android:padding="16dp"
-                    android:orientation="horizontal"
-                    android:gravity="center"
+                    android:layout_height="150dp"
                     android:onClick="goToParsingJson">
                     <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="80dp"
+                        android:background="@drawable/smile_bg1"/>
+                    <TextView
+                        android:id="@+id/suzilTitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="20dp"
-                        android:orientation="vertical">
-                        <ImageView
-                            android:id="@+id/waterImg"
-                            android:layout_width="65dp"
-                            android:layout_height="65dp"
-                            android:layout_marginBottom="5dp"
-                            android:src="@drawable/top"
-                            android:layout_gravity="center"/>
-                        <TextView
-                            android:id="@+id/waterTxt"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:text="매우 좋음"
-                            android:textSize="20sp"
-                            android:textColor="#0072ff"/>
-                    </LinearLayout>
+                        android:layout_toRightOf="@+id/smile"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginBottom="2dp"
+                        android:text="수질정보"
+                        android:textColor="#ffffff"
+                        android:textSize="20sp"
+                        android:layout_above="@+id/suzilSubTitle"/>
+                    <TextView
+                        android:id="@+id/suzilSubTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_above="@+id/container"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginLeft="15dp"
+                        android:layout_toRightOf="@id/smile"
+                        android:text="로드중.."
+                        android:textSize="10sp"
+                        android:textColor="#ffffff"/>
                     <LinearLayout
+                        android:id="@+id/container"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
+                        android:layout_height="70dp"
+                        android:layout_alignParentBottom="true"
+                        android:layout_toRightOf="@+id/smile"
+                        android:layout_marginLeft="15dp"
+                        android:gravity="center_vertical"
+                        android:background="#ffffff"
+                        android:orientation="horizontal">
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="10dp"
-                            android:gravity="center">
-                            <ImageView
-                                android:layout_width="23dp"
-                                android:layout_height="23dp"
-                                android:layout_marginRight="5dp"
-                                android:src="@drawable/number1"/>
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginRight="5dp"
-                                android:text="pH :"
-                                android:textStyle="bold"
-                                android:textSize="18sp"/>
+                            android:orientation="vertical">
                             <TextView
                                 android:id="@+id/ph"
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="데이터 로드중.."
-                                android:textSize="15sp"/>
+                                android:layout_height="20dp"
+                                android:text="매우 좋음"
+                                android:textStyle="bold"
+                                android:textColor="#00bf4d"/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="20dp"
+                                android:text="pH"
+                                android:textStyle="bold"/>
                         </LinearLayout>
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="50dp"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:background="#958f89" />
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="10dp"
-                            android:gravity="center">
-                            <ImageView
-                                android:layout_width="23dp"
-                                android:layout_height="23dp"
-                                android:layout_marginRight="5dp"
-                                android:src="@drawable/number2"/>
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginRight="3dp"
-                                android:text="탁도 :"
-                                android:textStyle="bold"
-                                android:textSize="18sp"/>
+                            android:orientation="vertical">
                             <TextView
                                 android:id="@+id/tak"
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="데이터 로드중.."
-                                android:textSize="15sp"/>
+                                android:layout_height="20dp"
+                                android:text="매우 좋음"
+                                android:textStyle="bold"
+                                android:textColor="#00bf4d"/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="20dp"
+                                android:text="탁도"
+                                android:textStyle="bold"/>
                         </LinearLayout>
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="50dp"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:background="#958f89" />
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:gravity="center">
-                            <ImageView
-                                android:layout_width="23dp"
-                                android:layout_height="23dp"
-                                android:layout_marginRight="5dp"
-                                android:src="@drawable/number3"/>
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginRight="3dp"
-                                android:text="잔류염소 :"
-                                android:textStyle="bold"
-                                android:textSize="18sp"/>
+                            android:orientation="vertical">
                             <TextView
                                 android:id="@+id/zan"
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="데이터 로드중.."
-                                android:textSize="15sp"/>
+                                android:layout_height="20dp"
+                                android:text="매우 좋음"
+                                android:textStyle="bold"
+                                android:textColor="#00bf4d"/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="20dp"
+                                android:text="잔류염소"
+                                android:textStyle="bold"/>
                         </LinearLayout>
                     </LinearLayout>
+                    <ImageView
+                        android:id="@+id/smile"
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:foregroundGravity="center_vertical"
+                        android:layout_marginLeft="10dp"
+                        android:src="@drawable/smile"/>
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="1dp"
+                    android:background="#bfbfbf" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#d1f8fa"
+                    android:orientation="vertical"
+                    android:padding="15dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="우리집 물사용 현황(1일/1인)"
+                        android:textSize="15sp"
+                        android:textStyle="bold"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:text="(월사용량÷사용일/거주인)"
+                        android:textSize="12sp"
+                        android:layout_gravity="right"/>
+                    <com.github.mikephil.charting.charts.LineChart
+                        android:id="@+id/chart1"
+                        android:layout_width="match_parent"
+                        android:layout_height="130dp"
+                        android:onClick="goToWVM"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="12sp"
+                        android:text="단위:리터"
+                        android:layout_gravity="right"/>
                 </LinearLayout>
                 <View
                     android:layout_width="fill_parent"
                     android:layout_height="1dp"
-                    android:layout_marginTop="15dp"
-                    android:layout_marginBottom="15dp"
                     android:background="#958f89" />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:text="1인 물사용량 / 1일"
-                    android:textSize="20sp"
-                    android:textStyle="bold"/>
-                <com.github.mikephil.charting.charts.LineChart
-                    android:id="@+id/chart1"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="200dp"
-                    android:onClick="goToWVM"/>
-                <View
-                    android:layout_width="fill_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="15dp"
-                    android:layout_marginBottom="15dp"
-                    android:background="#958f89" />
-                <TextView
-                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp"
-                    android:text="국가별 급수량"
-                    android:textSize="20sp"
-                    android:textStyle="bold"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="right"
-                    android:text="출처 : 한국수자원공사"/>
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="170dp"
-                    android:src="@drawable/img"
-                    android:onClick="goToWaterData"/>
+                    android:padding="15dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:text="물 정보"
+                        android:textSize="15sp"
+                        android:textStyle="bold"/>
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="300dp"
+
+                        android:src="@drawable/moolgamoom"
+                        android:onClick="goToWaterData"/>
+                </LinearLayout>
                 <!--<com.github.mikephil.charting.charts.BarChart-->
                     <!--android:id="@+id/chart"-->
                     <!--android:layout_width="match_parent"-->
@@ -190,11 +203,11 @@
     <LinearLayout
         android:layout_gravity="bottom"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="#000000">
+        android:layout_height="wrap_content">
         <android.support.v4.view.ViewPager
             android:layout_width="match_parent"
             android:layout_height="60dp"
+            android:background="#cfcfcf"
             android:id="@+id/pager">
         </android.support.v4.view.ViewPager>
     </LinearLayout>

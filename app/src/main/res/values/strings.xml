@@ -1,8 +1,9 @@
 <resources>
-    <string name="app_name">수(水)가계부</string>
+    <string name="app_name">水계부</string>
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="user_data_update">Update</string>
     <string name="title_activity_login">Login</string>
     <string name="title_activity_setting_user">SettingUser</string>
     <string name="title_activity_water_data">WaterData</string>

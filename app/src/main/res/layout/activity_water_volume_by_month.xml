@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical"
-    tools:context=".WaterVolumebyMonth">
+    tools:context="com.proj.hwanik.water.WaterVolumebyMonth">
     <include
         android:id="@+id/toolBar"
         layout="@layout/tool_bar"/>
@@ -12,37 +12,48 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:foreground="?android:windowContentOverlay">
-        <ScrollView
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:weightSum="2"
+            android:orientation="vertical">
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:orientation="vertical">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:text="물 사용량"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginLeft="10dp"
+                    android:text="우리집 물 사용"
                     android:textSize="20sp"
                     android:textStyle="bold"/>
                 <com.github.mikephil.charting.charts.BarChart
                     android:id="@+id/chart"
                     android:layout_width="match_parent"
-                    android:layout_height="250dp"
-                    android:layout_margin="10dp"/>
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="5dp" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:text="세대요금"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginLeft="10dp"
+                    android:text="우리집 수도요금"
                     android:textSize="20sp"
                     android:textStyle="bold"/>
                 <com.github.mikephil.charting.charts.BarChart
                     android:id="@+id/chart1"
                     android:layout_width="match_parent"
-                    android:layout_height="250dp"
-                    android:layout_margin="10dp"/>
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="5dp"/>
                 <!--<TextView-->
                     <!--android:layout_width="wrap_content"-->
                     <!--android:layout_height="wrap_content"-->
@@ -55,6 +66,6 @@
                     <!--android:layout_height="250dp"-->
                     <!--android:layout_margin="10dp"/>-->
             </LinearLayout>
-        </ScrollView>
+        </LinearLayout>
     </FrameLayout>
 </LinearLayout>

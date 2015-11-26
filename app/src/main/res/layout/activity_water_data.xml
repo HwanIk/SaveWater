@@ -3,29 +3,47 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.example.hwanik.water.WaterData">
+    android:weightSum="2"
+    tools:context="com.proj.hwanik.water.WaterData">
+    <include
+        android:id="@+id/toolBar"
+        layout="@layout/tool_bar"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
         android:layout_marginLeft="15dp"
         android:text="국가별 수돗물 요금 현황"
+        android:textStyle="bold"
         android:textSize="20sp"/>
     <ImageView
         android:layout_width="match_parent"
-        android:layout_height="230dp"
+        android:layout_height="match_parent"
         android:layout_margin="15dp"
-        android:src="@drawable/water_price_by_nation"/>
-    <TextView
-        android:layout_width="wrap_content"
+        android:src="@drawable/data1"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:layout_marginLeft="15dp"
-        android:text="국가별 1인 하루 물 사용량"
-        android:textSize="20sp"/>
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="195dp"
-        android:layout_margin="15dp"
-        android:src="@drawable/water_volume_day"/>
+        android:orientation="vertical"
+        android:layout_weight="1">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_marginLeft="15dp"
+            android:text="국가별 1인 하루 물 사용량"
+            android:textStyle="bold"
+            android:textSize="20sp"/>
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="15dp"
+            android:src="@drawable/data2"/>
+    </LinearLayout>
 </LinearLayout>

@@ -4,8 +4,13 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageView
+    <TextView
+        android:id="@+id/tv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/imageView" />
+        android:padding="16dp"
+        android:gravity="center_vertical"
+        android:text="오늘은 수질 상태가 좋습니다"
+        android:textSize="20sp"
+        android:textColor="#0022ff"/>
 </LinearLayout>

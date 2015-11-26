@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.example.hwanik.water.test">
+    tools:context="com.proj.hwanik.water.test">
 
     <include
         android:id="@+id/toolbar_spinner"
@@ -11,7 +11,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="-15dp"
+        android:layout_marginTop="-10dp"
+        android:layout_marginBottom="-10dp"
         android:paddingLeft="15dp"
         android:paddingRight="15dp"
         android:orientation="vertical">
@@ -20,8 +21,122 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
     </LinearLayout>
-    <ListView
-        android:id="@+id/lv"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"></ListView>
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="10dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginRight="5dp"
+                android:src="@drawable/suzil_icon"/>
+            <TextView
+                android:id="@+id/jungsujang"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="고령 정수장"
+                android:textSize="20sp"
+                android:textStyle="bold"/>
+            <TextView
+                android:id="@+id/dayOfUpdate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="로딩중.."/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+            <ImageView
+                android:layout_width="35dp"
+                android:layout_height="18dp"
+                android:layout_marginRight="2dp"
+                android:src="@drawable/phtitle1"/>
+            <TextView
+                android:id="@+id/ph"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="7.6PH"
+                android:layout_marginRight="5dp"
+                android:textSize="12sp"/>
+            <ImageView
+                android:layout_width="35dp"
+                android:layout_height="18dp"
+                android:layout_marginRight="2dp"
+                android:src="@drawable/taktitle1"/>
+            <TextView
+                android:id="@+id/tak"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0.06NTU"
+                android:layout_marginRight="5dp"
+                android:textSize="12sp"/>
+            <ImageView
+                android:layout_width="55dp"
+                android:layout_height="18dp"
+                android:layout_marginRight="2dp"
+                android:src="@drawable/zantitle1"/>
+            <TextView
+                android:id="@+id/zan"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0.8(mg/L)"
+                android:textSize="12sp"/>
+        </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="15dp"
+            android:background="#958f89" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:orientation="horizontal">
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginRight="5dp"
+                android:src="@drawable/suzil_icon"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="수질항목"
+                android:textSize="20sp"
+                android:textStyle="bold"/>
+        </LinearLayout>
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:padding="10dp">
+            <ImageView
+                android:layout_width="300dp"
+                android:layout_height="80dp"
+                android:layout_marginBottom="10dp"
+                android:src="@drawable/description1"/>
+            <ImageView
+                android:layout_width="300dp"
+                android:layout_height="130dp"
+                android:layout_marginBottom="10dp"
+                android:src="@drawable/description2"/>
+            <ImageView
+                android:layout_width="300dp"
+                android:layout_height="130dp"
+                android:src="@drawable/description3"/>
+        </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
 </LinearLayout>

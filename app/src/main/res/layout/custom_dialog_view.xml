@@ -29,7 +29,7 @@
         android:id="@+id/waterVolume"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="number"
+        android:inputType="numberDecimal"
         android:layout_marginTop="4dp"
         android:textColor="#000000"
         android:textSize="14sp" />

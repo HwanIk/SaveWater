@@ -13,11 +13,11 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.example.hwanik.water"
+        applicationId "com.proj.hwanik.water"
         minSdkVersion 19
         targetSdkVersion 22
-        versionCode 1
-        versionName "1.0"
+        versionCode 3
+        versionName "1.0.1"
     }
     buildTypes {
         release {
@@ -48,4 +48,6 @@ dependencies {
         exclude group: 'com.android.support', module: 'appcompat-v7'
     }
     compile  'javax.mail:javax.mail-api:1.4.7'
+    compile 'com.squareup.picasso:picasso:2.3.4'
+    compile 'com.ssomai:android.scalablelayout:2.1.0'
 }
