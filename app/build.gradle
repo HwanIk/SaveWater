@@ -16,8 +16,8 @@ android {
         applicationId "com.proj.hwanik.water"
         minSdkVersion 19
         targetSdkVersion 22
-        versionCode 3
-        versionName "1.0.1"
+        versionCode 7
+        versionName "1.0.5"
     }
     buildTypes {
         release {

@@ -12,9 +12,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.graphics.Color;
+
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
@@ -50,14 +52,14 @@ public class MainActivity extends AppCompatActivity {
     MaterialDialog.Builder dialogBuilder;
     MaterialDialog mDialog;
     int checkpoint=0;
-    //차트 그리기에 관련된 변수
+    //차트 그리기에 관련된 변수http://blog.naver.com/PostList.nhn?blogId=bbaldeapp&from=postList&categoryNo=14
     LineChart mChart;
 
     //공공데이터를 담는 리스트
     ArrayList<String> items = new ArrayList<>();
-    private String PurificationPlant_choice;
+    private String PurificationPlant_choice="";
     private String Jungsujang;
-    private int userIndex;
+    private int userIndex=-1;
 
     TextView ph,tak,zan,suzilSubTitle;
 
@@ -147,7 +149,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present. 
-        getMenuInflater().inflate(R.menu.menu_main,menu);
+        getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
     @Override
@@ -168,6 +170,13 @@ public class MainActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+    private void refresh() {
+        mDialog.show();
+        LineChartSet();
+        new JsonLoadingTask().execute();
+    }
+
     private void LineChartSet() {
         //linechart set
         mChart = (LineChart) findViewById(R.id.chart1);
@@ -181,6 +190,10 @@ public class MainActivity extends AppCompatActivity {
         mChart.getAxisRight().setDrawAxisLine(false);
         mChart.getXAxis().setDrawAxisLine(false);
         mChart.getXAxis().setDrawGridLines(false); // 데이터 세로선
+        mChart.getAxisRight().setDrawAxisLine(false);
+        XAxis xAxis = mChart.getXAxis();
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        mChart.getAxisRight().setDrawLabels(false);
 
         // enable touch gestures
         mChart.setTouchEnabled(true);
@@ -231,7 +244,7 @@ public class MainActivity extends AppCompatActivity {
                     DrawLineChart(name,maxIndex,maxArray,dataSets);
                 }
                 if(myIndex!=-1) {
-                    String name="my";
+                    String name=ParseUser.getCurrentUser().getUsername().toLowerCase();
                     JSONArray myArray = (JSONArray) list.get(myIndex).getJSONArray("conversionWV");
                     DrawLineChart(name,myIndex,myArray,dataSets);
                 }
@@ -248,7 +261,7 @@ public class MainActivity extends AppCompatActivity {
         ArrayList<Entry> values = new ArrayList<Entry>();
 
         final ArrayList<String> xVals = new ArrayList<String>();
-        for (int i = 0; i < 12; i++) {
+        for (int i = 1; i <= 12; i++) {
             xVals.add((i) + "월");
         }
 
@@ -262,11 +275,13 @@ public class MainActivity extends AppCompatActivity {
         d.setLineWidth(2.5f);
         d.setCircleSize(4f);
 
-        int color;
-        if(name.equals("my"))
+        int color = 0;
+        if(name.equals(ParseUser.getCurrentUser().getUsername().toLowerCase()))
             color = Color.parseColor("#FFFF0000");
-        else
-            color = mColors[ index % mColors.length];
+        else if(name.equals("상위 10%"))
+            color = Color.parseColor("#FF44C1FF");
+        else if(name.equals("하위 10%"))
+            color = Color.parseColor("#FFF9A600");
         d.setColor(color);
         d.setCircleColor(color);
         dataSets.add(d);
@@ -279,7 +294,6 @@ public class MainActivity extends AppCompatActivity {
         LineData data = new LineData(xVals, dataSets);
         mChart.setData(data);
         mChart.invalidate();
-        mDialog.dismiss();
     }
 
     private int[] mColors = new int[] {
@@ -287,13 +301,6 @@ public class MainActivity extends AppCompatActivity {
             ColorTemplate.VORDIPLOM_COLORS[1],
             ColorTemplate.VORDIPLOM_COLORS[2]
     };
-
-    private void refresh() {
-        checkpoint++;
-        mDialog.show();
-        LineChartSet();
-        new JsonLoadingTask().execute();
-    }
 
     private void logout() {
         ParseUser.logOut();
@@ -318,37 +325,39 @@ public class MainActivity extends AppCompatActivity {
             }
         }).start();
         try {
-            SimpleDateFormat mSimpleDateFormat = new SimpleDateFormat ("yyyy-MM-dd", Locale.KOREA );
-            SimpleDateFormat mSimpleDateFormat1 = new SimpleDateFormat ("yyyy.MM.dd", Locale.KOREA );
-            Date currentTime = new Date( );
-            String mTime = mSimpleDateFormat.format ( currentTime );
-            String mTime1= mSimpleDateFormat1.format( currentTime );
+            if(!PurificationPlant_choice.equals("")) {
+                SimpleDateFormat mSimpleDateFormat = new SimpleDateFormat("yyyyMMdd", Locale.KOREA);
+                SimpleDateFormat mSimpleDateFormat1 = new SimpleDateFormat("yyyy.MM.dd", Locale.KOREA);
+                Date currentTime = new Date();
+                String mTime = mSimpleDateFormat.format(currentTime);
+                String mTime1 = mSimpleDateFormat1.format(currentTime);
 
-            SimpleDateFormat CurHourFormat = new SimpleDateFormat("HH");
-            String strCurHour = CurHourFormat.format(currentTime);
+                SimpleDateFormat CurHourFormat = new SimpleDateFormat("HH");
+                String strCurHour = CurHourFormat.format(currentTime);
+                int hour = Integer.parseInt(strCurHour) - 1;
+                strCurHour = String.valueOf(hour);
 
-            String line = getStringFromUrl("http://opendata.kwater.or.kr:80/openapi-data/service/pubd/waterways/wdr/dailwater/list?_type=json&fcode=" + PurificationPlant_choice + "&stdt=2015-10-01&eddt=" + mTime + "&serviceKey=E%2B0%2BhJolGH9ppT7r1hfU18qRRHvxTQOATomUAZ%2BIiHXSQ666uyApIt0sQCdWmGCM%2FlRiQ8wGLHTDr4aG6EyCbQ%3D%3D");
-            String line1 = line.substring(96, line.length() - 4);
+                String line = getStringFromUrl("http://opendata.kwater.or.kr/openapi-data/service/pubd/rwis/waterQuality/list?_type=json&stDt=20151119&stTm=00&edDt=" + mTime + "&edTm="+strCurHour+"&sujCode=" + PurificationPlant_choice + "&numOfRows=10&pageNo=1&serviceKey=E%2B0%2BhJolGH9ppT7r1hfU18qRRHvxTQOATomUAZ%2BIiHXSQ666uyApIt0sQCdWmGCM%2FlRiQ8wGLHTDr4aG6EyCbQ%3D%3D");
+                String line1 = line.substring(96, line.length() - 4);
 
-            if(PurificationPlant_choice.equals("337")){
-                line1="["+line1+"]";
-            }
-                /* 넘어오는 데이터 구조 { [ { } ] } JSON 객체 안에 배열안에 내부JSON 객체*/
 
-            JSONArray Array = new JSONArray(line1);
+            /* 넘어오는 데이터 구조 { [ { } ] } JSON 객체 안에 배열안에 내부JSON 객체*/
 
-            // bodylist 배열안에 내부 JSON 이므로 JSON 내부 객체 생성
-            JSONObject insideObject = Array.getJSONObject(0);
+                JSONArray Array = new JSONArray(line1);
 
-            // StringBuffer 메소드 ( append : StringBuffer 인스턴스에 뒤에 덧붙인다. )
-            // JSONObject 메소드 ( get.String(), getInt(), getBoolean() .. 등 : 객체로부터 데이터의 타입에 따라 원하는 데이터를 읽는다. )
-            if(insideObject.getString("item1")==null){
-                return null;
-            }else {
-                items.add(insideObject.getString("item4"));
-                items.add(insideObject.getString("item5"));
-                items.add(insideObject.getString("item6"));
-                items.add(mTime1+" "+strCurHour+"시 기준");
+                // bodylist 배열안에 내부 JSON 이므로 JSON 내부 객체 생성
+                JSONObject insideObject = Array.getJSONObject(0);
+
+                // StringBuffer 메소드 ( append : StringBuffer 인스턴스에 뒤에 덧붙인다. )
+                // JSONObject 메소드 ( get.String(), getInt(), getBoolean() .. 등 : 객체로부터 데이터의 타입에 따라 원하는 데이터를 읽는다. )
+                if (insideObject.getString("phVal") == null) {
+                    return null;
+                } else {
+                    items.add(insideObject.getString("phVal"));
+                    items.add(insideObject.getString("tbVal"));
+                    items.add(insideObject.getString("clVal"));
+                    items.add(mTime1 + " " + strCurHour + "시 기준");
+                }
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -422,7 +431,7 @@ public class MainActivity extends AppCompatActivity {
 
                 suzilSubTitle.setText("("+Jungsujang+" "+items.get(3)+")");
 //                progressDialog.dismiss();
-            } else {
+            } else if(items.size() == 0) {
                 checkpoint++;
                 ph.setText("점검중..");
                 tak.setText("점검중..");
@@ -431,6 +440,7 @@ public class MainActivity extends AppCompatActivity {
                 if(checkpoint<3)
                     new JsonLoadingTask().execute();
             }
+            mDialog.dismiss();
         } // onPostExecute : 백그라운드 작업이 끝난 후 UI 작업을 진행한다.
     } // JsonLoadingTask
 

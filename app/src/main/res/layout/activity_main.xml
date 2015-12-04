@@ -155,8 +155,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="10dp"
-                        android:text="(월사용량÷사용일/거주인)"
-                        android:textSize="12sp"
+                        android:text="(월사용량÷사용일÷거주인)"
+                        android:textSize="10sp"
                         android:layout_gravity="right"/>
                     <com.github.mikephil.charting.charts.LineChart
                         android:id="@+id/chart1"
@@ -166,8 +166,8 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="12sp"
-                        android:text="단위:리터"
+                        android:textSize="10sp"
+                        android:text="(단위:리터)"
                         android:layout_gravity="right"/>
                 </LinearLayout>
                 <View

@@ -54,40 +54,40 @@
             android:gravity="center_vertical"
             android:orientation="horizontal">
             <ImageView
-                android:layout_width="35dp"
-                android:layout_height="18dp"
+                android:layout_width="30dp"
+                android:layout_height="14dp"
                 android:layout_marginRight="2dp"
                 android:src="@drawable/phtitle1"/>
             <TextView
                 android:id="@+id/ph"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="7.6PH"
+                android:text="점검중.."
                 android:layout_marginRight="5dp"
-                android:textSize="12sp"/>
+                android:textSize="10sp"/>
             <ImageView
-                android:layout_width="35dp"
-                android:layout_height="18dp"
+                android:layout_width="30dp"
+                android:layout_height="14dp"
                 android:layout_marginRight="2dp"
                 android:src="@drawable/taktitle1"/>
             <TextView
                 android:id="@+id/tak"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="0.06NTU"
+                android:text="점검중.."
                 android:layout_marginRight="5dp"
-                android:textSize="12sp"/>
+                android:textSize="10sp"/>
             <ImageView
-                android:layout_width="55dp"
-                android:layout_height="18dp"
+                android:layout_width="45dp"
+                android:layout_height="14dp"
                 android:layout_marginRight="2dp"
                 android:src="@drawable/zantitle1"/>
             <TextView
                 android:id="@+id/zan"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="0.8(mg/L)"
-                android:textSize="12sp"/>
+                android:text="점검중.."
+                android:textSize="10sp"/>
         </LinearLayout>
         <View
             android:layout_width="match_parent"

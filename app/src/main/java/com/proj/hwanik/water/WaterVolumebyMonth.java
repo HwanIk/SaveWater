@@ -117,10 +117,10 @@ public class WaterVolumebyMonth extends AppCompatActivity {
                         tmp[3] = (JSONArray) waterVolumes.get(0).getJSONArray("waterVolumes");
                         for (int i = 0; i < 12; i++) {
                             try {
-                                conversionVolumeEntries.set(i, new BarEntry(tmp[0].getInt(i), i));
-                                volumeEntries.set(i, new BarEntry(tmp[3].getInt(i), i));
-                                sPriceEntries.set(i, new BarEntry(tmp[1].getInt(i), i));
-                                gPriceEntries.set(i, new BarEntry(tmp[2].getInt(i), i));
+                                conversionVolumeEntries.set(i, new BarEntry((float) tmp[0].getDouble(i), i));
+                                volumeEntries.set(i, new BarEntry((float) tmp[3].getDouble(i), i));
+                                sPriceEntries.set(i, new BarEntry((float) tmp[1].getDouble(i), i));
+                                gPriceEntries.set(i, new BarEntry((float) tmp[2].getDouble(i), i));
                             } catch (JSONException e1) {
                                 e1.printStackTrace();
                             }
