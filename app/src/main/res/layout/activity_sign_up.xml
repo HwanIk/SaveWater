@@ -40,23 +40,6 @@
             android:text="중복확인" />
     </LinearLayout>
     <android.support.design.widget.TextInputLayout
-        android:id="@+id/input_layout_pwd"
-        android:layout_width="220dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp">
-        <EditText
-            android:id="@+id/userPwd"
-            android:layout_width="220dp"
-            android:layout_height="40dp"
-            android:padding="5dp"
-            android:hint="비밀번호를 입력해주세요"
-            android:textSize="15sp"
-            android:background="@drawable/round_edittext"
-            android:singleLine="true"
-            android:nextFocusDown="@+id/textView2"
-            android:password="true"/>
-    </android.support.design.widget.TextInputLayout>
-    <android.support.design.widget.TextInputLayout
         android:id="@+id/input_layout_nName"
         android:layout_width="220dp"
         android:layout_height="wrap_content">
@@ -73,6 +56,24 @@
             app:met_baseColor="#000000"
             app:met_primaryColor="#0072ff"
             app:met_textColorHint="#d8d8d8"/>
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/input_layout_pwd"
+        android:layout_width="220dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp">
+        <EditText
+            android:id="@+id/userPwd"
+            android:layout_width="220dp"
+            android:layout_height="40dp"
+            android:padding="5dp"
+            android:hint="비밀번호를 입력해주세요"
+            android:textSize="15sp"
+            android:background="@drawable/round_edittext"
+            android:singleLine="true"
+            android:nextFocusDown="@+id/textView2"
+            android:password="true"/>
     </android.support.design.widget.TextInputLayout>
 
     <TextView
@@ -116,7 +117,8 @@
             android:background="@drawable/round_edittext"
             android:padding="5dp"
             android:hint="거주인원을 입력해주세요"
-            android:textSize="15sp" />
+            android:textSize="15sp"
+            android:inputType="number"/>
     </android.support.design.widget.TextInputLayout>
     <ImageView
         android:id="@+id/btnSignUp"
